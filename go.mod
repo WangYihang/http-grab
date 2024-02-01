@@ -1,6 +1,6 @@
 module github.com/WangYihang/http-grab
 
-go 1.21.6
+go 1.21
 
 require github.com/jessevdk/go-flags v1.5.0
 

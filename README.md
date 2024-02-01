@@ -12,7 +12,7 @@ go install github.com/WangYihang/http-grab@latest
 
 ## Usage
 
-```
+```bash
 $ http-grab --h
 Usage:
   http-grab [OPTIONS]
@@ -30,7 +30,7 @@ Help Options:
   -h, --help         Show this help message
 ```
 
-```
+```bash
 $ head input.txt
 23.63.66.161
 3.210.226.220
@@ -44,12 +44,81 @@ $ head input.txt
 23.202.84.42
 ```
 
-```
+```bash
 $ http-grab -i input.txt -o output.txt
 ...
 ```
 
-```json
+```bash
 $ head -n 1 output.txt
-{"index":8,"started_at":1706763874999,"finished_at":1706763875591,"num_tries":1,"timeout":8,"error":"","ip":"104.233.202.168","port":80,"path":"verification.html","host":"104.233.202.168","http":{"request":{"method":"GET","url":"http://104.233.202.168:80/verification.html","host":"104.233.202.168","remote_addr":"","request_uri":"","proto":"HTTP/1.1","proto_major":1,"proto_minor":1,"header":{"User-Agent":["Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0"]},"content_length":0,"transfer_encoding":null,"close":false,"form":null,"post_form":null,"multipart_form":null,"trailer":null},"response":{"status":"403 Forbidden","status_code":403,"proto":"HTTP/1.1","proto_major":1,"proto_minor":1,"header":{"Connection":["keep-alive"],"Content-Length":["548"],"Content-Type":["text/html; charset=utf-8"],"Date":["Thu, 01 Feb 2024 05:04:35 GMT"],"Server":["nginx"]},"raw_body":"PGh0bWw+DQo8aGVhZD48dGl0bGU+NDAzIEZvcmJpZGRlbjwvdGl0bGU+PC9oZWFkPg0KPGJvZHk+DQo8Y2VudGVyPjxoMT40MDMgRm9yYmlkZGVuPC9oMT48L2NlbnRlcj4NCjxocj48Y2VudGVyPm5naW54PC9jZW50ZXI+DQo8L2JvZHk+DQo8L2h0bWw+DQo8IS0tIGEgcGFkZGluZyB0byBkaXNhYmxlIE1TSUUgYW5kIENocm9tZSBmcmllbmRseSBlcnJvciBwYWdlIC0tPg0KPCEtLSBhIHBhZGRpbmcgdG8gZGlzYWJsZSBNU0lFIGFuZCBDaHJvbWUgZnJpZW5kbHkgZXJyb3IgcGFnZSAtLT4NCjwhLS0gYSBwYWRkaW5nIHRvIGRpc2FibGUgTVNJRSBhbmQgQ2hyb21lIGZyaWVuZGx5IGVycm9yIHBhZ2UgLS0+DQo8IS0tIGEgcGFkZGluZyB0byBkaXNhYmxlIE1TSUUgYW5kIENocm9tZSBmcmllbmRseSBlcnJvciBwYWdlIC0tPg0KPCEtLSBhIHBhZGRpbmcgdG8gZGlzYWJsZSBNU0lFIGFuZCBDaHJvbWUgZnJpZW5kbHkgZXJyb3IgcGFnZSAtLT4NCjwhLS0gYSBwYWRkaW5nIHRvIGRpc2FibGUgTVNJRSBhbmQgQ2hyb21lIGZyaWVuZGx5IGVycm9yIHBhZ2UgLS0+DQo=","body":"\u003chtml\u003e\r\n\u003chead\u003e\u003ctitle\u003e403 Forbidden\u003c/title\u003e\u003c/head\u003e\r\n\u003cbody\u003e\r\n\u003ccenter\u003e\u003ch1\u003e403 Forbidden\u003c/h1\u003e\u003c/center\u003e\r\n\u003chr\u003e\u003ccenter\u003enginx\u003c/center\u003e\r\n\u003c/body\u003e\r\n\u003c/html\u003e\r\n\u003c!-- a padding to disable MSIE and Chrome friendly error page --\u003e\r\n\u003c!-- a padding to disable MSIE and Chrome friendly error page --\u003e\r\n\u003c!-- a padding to disable MSIE and Chrome friendly error page --\u003e\r\n\u003c!-- a padding to disable MSIE and Chrome friendly error page --\u003e\r\n\u003c!-- a padding to disable MSIE and Chrome friendly error page --\u003e\r\n\u003c!-- a padding to disable MSIE and Chrome friendly error page --\u003e\r\n","content_length":548,"transfer_encoding":null,"close":false,"uncompressed":false,"trailer":null}}}
+```
+
+```json
+{
+    "index": 26,
+    "started_at": 1706764512210,
+    "finished_at": 1706764512755,
+    "num_tries": 1,
+    "timeout": 8,
+    "error": "",
+    "ip": "34.149.112.180",
+    "port": 80,
+    "path": "index.html",
+    "host": "34.149.112.180",
+    "http": {
+        "request": {
+            "method": "GET",
+            "url": "http://34.149.112.180:80/index.html",
+            "host": "34.149.112.180",
+            "remote_addr": "",
+            "request_uri": "",
+            "proto": "HTTP/1.1",
+            "proto_major": 1,
+            "proto_minor": 1,
+            "header": {
+                "User-Agent": [
+                    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0"
+                ]
+            },
+            "content_length": 0,
+            "transfer_encoding": null,
+            "close": false,
+            "form": null,
+            "post_form": null,
+            "multipart_form": null,
+            "trailer": null
+        },
+        "response": {
+            "status": "404 Not Found",
+            "status_code": 404,
+            "proto": "HTTP/1.1",
+            "proto_major": 1,
+            "proto_minor": 1,
+            "header": {
+                "Content-Length": [
+                    "42"
+                ],
+                "Content-Type": [
+                    "text/plain; charset=UTF-8"
+                ],
+                "Date": [
+                    "Thu, 01 Feb 2024 05:15:12 GMT"
+                ],
+                "Server": [
+                    "akka-http/10.2.7"
+                ],
+                "Via": [
+                    "1.1 google"
+                ]
+            },
+            "raw_body": "VGhlIHJlcXVlc3RlZCByZXNvdXJjZSBjb3VsZCBub3QgYmUgZm91bmQu",
+            "body": "The requested resource could not be found.",
+            "content_length": 42,
+            "transfer_encoding": null,
+            "close": false,
+            "uncompressed": false,
+            "trailer": null
+        }
+    }
+}
 ```
