@@ -23,6 +23,7 @@ go.work
 # Data files
 input.txt
 output.txt
+*.status
 
 # Goreleaser
 dist/

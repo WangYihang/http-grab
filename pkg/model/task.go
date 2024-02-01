@@ -64,7 +64,7 @@ func (t *Task) Do() {
 		req, err := http.NewRequest(http.MethodGet, u, nil)
 		if err != nil {
 			t.Error = err.Error()
-			slog.Error("error occured while creating http request", slog.String("error", err.Error()))
+			slog.Debug("error occured while creating http request", slog.String("error", err.Error()))
 			continue
 		}
 		req.Host = t.Host
@@ -74,7 +74,7 @@ func (t *Task) Do() {
 		resp, err := client.Do(req)
 		if err != nil {
 			t.Error = err.Error()
-			slog.Error("error occured while doing http request", slog.String("error", err.Error()))
+			slog.Debug("error occured while doing http request", slog.String("error", err.Error()))
 			continue
 		}
 
@@ -82,7 +82,7 @@ func (t *Task) Do() {
 		httpRequest, err := NewHTTPRequest(req)
 		if err != nil {
 			t.Error = err.Error()
-			slog.Error("error occured while creating http request", slog.String("error", err.Error()))
+			slog.Debug("error occured while creating http request", slog.String("error", err.Error()))
 			continue
 		}
 		t.HTTP.Request = httpRequest
@@ -91,7 +91,7 @@ func (t *Task) Do() {
 		httpResponse, err := NewHTTPResponse(resp)
 		if err != nil {
 			t.Error = err.Error()
-			slog.Error("error occured while creating http response", slog.String("error", err.Error()))
+			slog.Debug("error occured while creating http response", slog.String("error", err.Error()))
 			continue
 		}
 		t.HTTP.Response = httpResponse

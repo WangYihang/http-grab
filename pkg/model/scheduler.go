@@ -2,9 +2,11 @@ package model
 
 import (
 	"bufio"
+	"fmt"
 	"log/slog"
 	"os"
 	"sync"
+	"time"
 )
 
 func FanIn[T any](cs []chan T) chan T {
@@ -80,16 +82,32 @@ func LoadTasks[T ITask](factory TaskFactory[T], inputFilePath string, port int, 
 	return out
 }
 
-func StoreTasks[T ITask](tasks chan T, path string) {
-	fd, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+func StoreTasks[T ITask](tasks chan T, outputFilePath string, statusUpdatesFilePath string, numTasks int) {
+	outputFd, err := os.OpenFile(outputFilePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 	if err != nil {
 		slog.Error("error occured while opening file", slog.String("error", err.Error()))
 		return
 	}
-	defer fd.Close()
-	for task := range tasks {
-		fd.WriteString(task.JSON() + "\n")
+	defer outputFd.Close()
+
+	statusUpdatesFd, err := os.OpenFile(statusUpdatesFilePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+	if err != nil {
+		slog.Error("error occured while opening file", slog.String("error", err.Error()))
+		return
 	}
+	statusUpdatesFd.WriteString("timestamp, finished_tasks, total_tasks\n")
+
+	index := 0
+	for task := range tasks {
+		index++
+		if index%32 == 0 {
+			slog.Info("updating status", slog.Int("finished_tasks", index), slog.Int("total_tasks", numTasks))
+			statusUpdatesFd.WriteString(fmt.Sprintf("%d, %d, %d\n", time.Now().UnixMicro(), index, numTasks))
+		}
+		outputFd.WriteString(task.JSON() + "\n")
+	}
+	slog.Info("updating status", slog.Int("finished_tasks", index), slog.Int("total_tasks", numTasks))
+	statusUpdatesFd.WriteString(fmt.Sprintf("%d, %d, %d\n", time.Now().UnixMicro(), index, numTasks))
 }
 
 func Worker[T ITask](tasks chan T) chan T {
@@ -124,4 +142,25 @@ func ReadFile(path string) chan string {
 		fd.Close()
 	}()
 	return out
+}
+
+func Duplicate(tasks chan ITask, n int) []chan ITask {
+	outChans := make([]chan ITask, n)
+	for i := range outChans {
+		outChans[i] = make(chan ITask)
+	}
+	go func() {
+		defer func() {
+			for _, ch := range outChans {
+				close(ch)
+			}
+		}()
+
+		for task := range tasks {
+			for _, ch := range outChans {
+				ch <- task
+			}
+		}
+	}()
+	return outChans
 }
