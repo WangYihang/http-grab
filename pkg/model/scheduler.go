@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"math/rand"
 	"os"
+	"strings"
 	"sync"
 	"time"
 )
@@ -75,6 +76,7 @@ func LoadTasks[T ITask](factory TaskFactory[T], inputFilePath string, port int, 
 		defer close(out)
 		index := 0
 		rng := rand.NewSource(seed)
+		slog.Info("loading tasks from file", slog.String("file", inputFilePath), slog.Int64("num_shards", numShards), slog.Int64("shard", shard))
 		for line := range ReadFile(inputFilePath) {
 			if rng.Int63()%numShards == shard {
 				task := factory(index, line, port, path, host, timeout, numRetries)
@@ -84,6 +86,27 @@ func LoadTasks[T ITask](factory TaskFactory[T], inputFilePath string, port int, 
 		}
 	}()
 	return out
+}
+
+func CountLines(path string) int {
+	fd, err := os.OpenFile(path, os.O_RDONLY, 0644)
+	if err != nil {
+		slog.Error("error occured while opening file", slog.String("error", err.Error()))
+		return 0
+	}
+	defer fd.Close()
+	scanner := bufio.NewScanner(fd)
+	count := 0
+	for scanner.Scan() {
+		if strings.TrimSpace(scanner.Text()) != "" {
+			count++
+		}
+	}
+	if err := scanner.Err(); err != nil {
+		slog.Error("error occured while scanning file", slog.String("error", err.Error()))
+		return 0
+	}
+	return count
 }
 
 func StoreTasks[T ITask](tasks chan T, outputFilePath string, statusUpdatesFilePath string, numTasks int) {

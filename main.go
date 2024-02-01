@@ -54,10 +54,7 @@ func load() chan *model.Task {
 
 func main() {
 	numWorkers := opts.NumWorkers
-	numTasks := 0
-	for range load() {
-		numTasks++
-	}
+	numTasks := model.CountLines(opts.InputFilePath)
 	slog.Info("all tasks loaded", slog.Int("num_tasks", numTasks))
 	resultChans := make([]chan *model.Task, 0, numWorkers)
 	for _, taskChan := range model.FanOut(load(), numWorkers) {
