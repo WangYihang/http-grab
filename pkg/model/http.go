@@ -95,6 +95,7 @@ func NewHTTPResponse(resp *http.Response) (*HTTPResponse, error) {
 		Uncompressed:     resp.Uncompressed,
 		Trailer:          resp.Trailer,
 	}
+	defer resp.Body.Close()
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		slog.Warn("error occured while reading response body", slog.String("error", err.Error()))
