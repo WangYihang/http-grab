@@ -13,6 +13,7 @@ type Task struct {
 	Index      int    `json:"index"`
 	StartedAt  int64  `json:"started_at"`
 	FinishedAt int64  `json:"finished_at"`
+	MaxTries   int    `json:"max_tries"`
 	NumTries   int    `json:"num_tries"`
 	Timeout    int    `json:"timeout"`
 	Error      string `json:"error"`
@@ -24,18 +25,19 @@ type Task struct {
 	HTTP HTTP   `json:"http"`
 }
 
-func NewTask(index int, line string, port int, path string, host string, timeout int) *Task {
+func NewTask(index int, line string, port int, path string, host string, timeout int, numRetries int) *Task {
 	ip := strings.TrimSpace(line)
 	if host == "" {
 		host = ip
 	}
 	return &Task{
-		Index:   index,
-		IP:      ip,
-		Port:    80,
-		Path:    path,
-		Timeout: timeout,
-		Host:    host,
+		Index:    index,
+		IP:       ip,
+		Port:     80,
+		Path:     path,
+		Timeout:  timeout,
+		Host:     host,
+		MaxTries: numRetries,
 	}
 }
 
@@ -44,7 +46,8 @@ func (t *Task) Do() {
 	defer func() {
 		t.FinishedAt = time.Now().UnixMilli()
 	}()
-	for i := 0; i < 1; i++ {
+
+	for t.NumTries < t.MaxTries {
 		// Increase NumTries
 		t.NumTries++
 

@@ -15,6 +15,7 @@ type Options struct {
 	Port           int    `short:"p" long:"port" description:"port" default:"80"`
 	Path           string `short:"P" long:"path" description:"path" default:"index.html"`
 	Host           string `short:"H" long:"host" description:"host" default:""`
+	MaxTries       int    `short:"m" long:"max-tries" description:"max tries" default:"4"`
 }
 
 var opts Options
@@ -36,6 +37,7 @@ func main() {
 		opts.Path,
 		opts.Host,
 		opts.Timeout,
+		opts.MaxTries,
 	), numWorkers) {
 		resultChans = append(resultChans, model.Worker(taskChan))
 	}

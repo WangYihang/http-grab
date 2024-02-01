@@ -64,15 +64,15 @@ type ITask interface {
 	JSON() string
 }
 
-type TaskFactory[T ITask] func(index int, ip string, port int, path string, host string, timeout int) T
+type TaskFactory[T ITask] func(index int, ip string, port int, path string, host string, timeout int, numRetries int) T
 
-func LoadTasks[T ITask](factory TaskFactory[T], inputFilePath string, port int, path string, host string, timeout int) chan T {
+func LoadTasks[T ITask](factory TaskFactory[T], inputFilePath string, port int, path string, host string, timeout int, numRetries int) chan T {
 	out := make(chan T)
 	go func() {
 		defer close(out)
 		index := 0
 		for line := range ReadFile(inputFilePath) {
-			task := factory(index, line, port, path, host, timeout)
+			task := factory(index, line, port, path, host, timeout, numRetries)
 			out <- task
 			index++
 		}
