@@ -18,16 +18,21 @@ Usage:
   http-grab [OPTIONS]
 
 Application Options:
-  -i, --input=       input file path
-  -o, --output=      output file path
-  -n, --num-workers= number of workers (default: 32)
-  -t, --timeout=     timeout (default: 8)
-  -p, --port=        port (default: 80)
-  -P, --path=        path (default: index.html)
-  -H, --host=        host
+  -i, --input=          input file path
+  -o, --output=         output file path
+  -s, --status-updates= status updates file path
+  -n, --num-workers=    number of workers (default: 32)
+      --seed=           seed (default: 0)
+      --num-shards=     number of shards (default: 1)
+      --shard=          shard (default: 0)
+  -p, --port=           port (default: 80)
+      --path=           path (default: index.html)
+      --host=           http host header
+  -m, --max-tries=      max tries (default: 4)
+  -t, --timeout=        timeout (default: 8)
 
 Help Options:
-  -h, --help         Show this help message
+  -h, --help            Show this help message
 ```
 
 ```bash

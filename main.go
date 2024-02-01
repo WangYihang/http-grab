@@ -12,12 +12,17 @@ type Options struct {
 	InputFilePath         string `short:"i" long:"input" description:"input file path" required:"true"`
 	OutputFilePath        string `short:"o" long:"output" description:"output file path" required:"true"`
 	StatusUpdatesFilePath string `short:"s" long:"status-updates" description:"status updates file path"`
-	NumWorkers            int    `short:"n" long:"num-workers" description:"number of workers" default:"32"`
-	Timeout               int    `short:"t" long:"timeout" description:"timeout" default:"8"`
-	Port                  int    `short:"p" long:"port" description:"port" default:"80"`
-	Path                  string `short:"P" long:"path" description:"path" default:"index.html"`
-	Host                  string `short:"H" long:"host" description:"host" default:""`
-	MaxTries              int    `short:"m" long:"max-tries" description:"max tries" default:"4"`
+
+	NumWorkers int   `short:"n" long:"num-workers" description:"number of workers" default:"32"`
+	Seed       int64 `long:"seed" description:"seed" default:"0"`
+	NumShards  int64 `long:"num-shards" description:"number of shards" default:"1"`
+	Shard      int64 `long:"shard" description:"shard" default:"0"`
+
+	Port     int    `short:"p" long:"port" description:"port" default:"80"`
+	Path     string `long:"path" description:"path" default:"index.html"`
+	Host     string `long:"host" description:"http host header" default:""`
+	MaxTries int    `short:"m" long:"max-tries" description:"max tries" default:"4"`
+	Timeout  int    `short:"t" long:"timeout" description:"timeout" default:"8"`
 }
 
 var opts Options
@@ -41,6 +46,9 @@ func load() chan *model.Task {
 		opts.Host,
 		opts.Timeout,
 		opts.MaxTries,
+		opts.Seed,
+		opts.NumShards,
+		opts.Shard,
 	)
 }
 

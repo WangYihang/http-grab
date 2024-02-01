@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"log/slog"
+	"math/rand"
 	"os"
 	"sync"
 	"time"
@@ -68,15 +69,18 @@ type ITask interface {
 
 type TaskFactory[T ITask] func(index int, ip string, port int, path string, host string, timeout int, numRetries int) T
 
-func LoadTasks[T ITask](factory TaskFactory[T], inputFilePath string, port int, path string, host string, timeout int, numRetries int) chan T {
+func LoadTasks[T ITask](factory TaskFactory[T], inputFilePath string, port int, path string, host string, timeout int, numRetries int, seed int64, numShards int64, shard int64) chan T {
 	out := make(chan T)
 	go func() {
 		defer close(out)
 		index := 0
+		rng := rand.NewSource(seed)
 		for line := range ReadFile(inputFilePath) {
-			task := factory(index, line, port, path, host, timeout, numRetries)
-			out <- task
-			index++
+			if rng.Int63()%numShards == shard {
+				task := factory(index, line, port, path, host, timeout, numRetries)
+				out <- task
+				index++
+			}
 		}
 	}()
 	return out
