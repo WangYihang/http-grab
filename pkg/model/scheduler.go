@@ -4,9 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"log/slog"
-	"math/rand"
 	"os"
-	"strings"
 	"sync"
 	"time"
 )
@@ -68,27 +66,26 @@ type ITask interface {
 	JSON() string
 }
 
-type TaskFactory[T ITask] func(index int, ip string, port int, path string, host string, timeout int, numRetries int) T
+type TaskFactory[T ITask] func(index int64, ip string, port int, path string, host string, timeout int, numRetries int) T
 
-func LoadTasks[T ITask](factory TaskFactory[T], inputFilePath string, port int, path string, host string, timeout int, numRetries int, seed int64, numShards int64, shard int64) chan T {
+func LoadTasks[T ITask](factory TaskFactory[T], inputFilePath string, port int, path string, host string, timeout int, numRetries int, numShards int64, shard int64) chan T {
 	out := make(chan T)
 	go func() {
 		defer close(out)
-		index := 0
-		rng := rand.NewSource(seed)
+		var index int64 = 0
 		slog.Info("loading tasks from file", slog.String("file", inputFilePath), slog.Int64("num_shards", numShards), slog.Int64("shard", shard))
 		for line := range ReadFile(inputFilePath) {
-			if rng.Int63()%numShards == shard {
+			if index%numShards == shard {
 				task := factory(index, line, port, path, host, timeout, numRetries)
 				out <- task
-				index++
 			}
+			index++
 		}
 	}()
 	return out
 }
 
-func CountLines(path string) int {
+func CountLines(path string, numShards int64, shard int64) int64 {
 	fd, err := os.OpenFile(path, os.O_RDONLY, 0644)
 	if err != nil {
 		slog.Error("error occured while opening file", slog.String("error", err.Error()))
@@ -96,11 +93,13 @@ func CountLines(path string) int {
 	}
 	defer fd.Close()
 	scanner := bufio.NewScanner(fd)
-	count := 0
+	var index int64 = 0
+	var count int64 = 0
 	for scanner.Scan() {
-		if strings.TrimSpace(scanner.Text()) != "" {
-			count++
+		if index%numShards == shard {
+			count += 1
 		}
+		index++
 	}
 	if err := scanner.Err(); err != nil {
 		slog.Error("error occured while scanning file", slog.String("error", err.Error()))
@@ -109,7 +108,7 @@ func CountLines(path string) int {
 	return count
 }
 
-func StoreTasks[T ITask](tasks chan T, outputFilePath string, statusUpdatesFilePath string, numTasks int) {
+func StoreTasks[T ITask](tasks chan T, outputFilePath string, statusUpdatesFilePath string, numTasks int64) {
 	outputFd, err := os.OpenFile(outputFilePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 	if err != nil {
 		slog.Error("error occured while opening file", slog.String("error", err.Error()))
@@ -122,18 +121,18 @@ func StoreTasks[T ITask](tasks chan T, outputFilePath string, statusUpdatesFileP
 		slog.Error("error occured while opening file", slog.String("error", err.Error()))
 		return
 	}
-	statusUpdatesFd.WriteString("timestamp, finished_tasks, total_tasks\n")
+	statusUpdatesFd.WriteString("timestamp,finished_tasks,total_tasks\n")
 
 	index := 0
 	for task := range tasks {
 		index++
 		if index%32 == 0 {
-			slog.Info("updating status", slog.Int("finished_tasks", index), slog.Int("total_tasks", numTasks))
-			statusUpdatesFd.WriteString(fmt.Sprintf("%d, %d, %d\n", time.Now().UnixMicro(), index, numTasks))
+			slog.Info("updating status", slog.Int("finished_tasks", index), slog.Int64("total_tasks", numTasks))
+			statusUpdatesFd.WriteString(fmt.Sprintf("%d,%d,%d\n", time.Now().UnixMicro(), index, numTasks))
 		}
 		outputFd.WriteString(task.JSON() + "\n")
 	}
-	slog.Info("updating status", slog.Int("finished_tasks", index), slog.Int("total_tasks", numTasks))
+	slog.Info("updating status", slog.Int("finished_tasks", index), slog.Int64("total_tasks", numTasks))
 	statusUpdatesFd.WriteString(fmt.Sprintf("%d, %d, %d\n", time.Now().UnixMicro(), index, numTasks))
 }
 

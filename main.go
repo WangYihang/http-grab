@@ -14,7 +14,6 @@ type Options struct {
 	StatusUpdatesFilePath string `short:"s" long:"status-updates" description:"status updates file path"`
 
 	NumWorkers int   `short:"n" long:"num-workers" description:"number of workers" default:"32"`
-	Seed       int64 `long:"seed" description:"seed" default:"0"`
 	NumShards  int64 `long:"num-shards" description:"number of shards" default:"1"`
 	Shard      int64 `long:"shard" description:"shard" default:"0"`
 
@@ -35,6 +34,10 @@ func init() {
 	if opts.StatusUpdatesFilePath == "" {
 		opts.StatusUpdatesFilePath = opts.OutputFilePath + ".status"
 	}
+	if opts.Shard >= opts.NumShards {
+		slog.Error("shard must be less than num-shards", slog.Int64("shard", opts.Shard), slog.Int64("num_shards", opts.NumShards))
+		os.Exit(1)
+	}
 }
 
 func load() chan *model.Task {
@@ -46,7 +49,6 @@ func load() chan *model.Task {
 		opts.Host,
 		opts.Timeout,
 		opts.MaxTries,
-		opts.Seed,
 		opts.NumShards,
 		opts.Shard,
 	)
@@ -54,8 +56,8 @@ func load() chan *model.Task {
 
 func main() {
 	numWorkers := opts.NumWorkers
-	numTasks := model.CountLines(opts.InputFilePath)
-	slog.Info("all tasks loaded", slog.Int("num_tasks", numTasks))
+	numTasks := model.CountLines(opts.InputFilePath, opts.NumShards, opts.Shard)
+	slog.Info("all tasks loaded", slog.Int64("num_tasks", numTasks))
 	resultChans := make([]chan *model.Task, 0, numWorkers)
 	for _, taskChan := range model.FanOut(load(), numWorkers) {
 		resultChans = append(resultChans, model.Worker(taskChan))

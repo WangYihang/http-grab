@@ -10,7 +10,7 @@ import (
 )
 
 type Task struct {
-	Index      int    `json:"index"`
+	Index      int64  `json:"index"`
 	StartedAt  int64  `json:"started_at"`
 	FinishedAt int64  `json:"finished_at"`
 	MaxTries   int    `json:"max_tries"`
@@ -25,7 +25,7 @@ type Task struct {
 	HTTP HTTP   `json:"http"`
 }
 
-func NewTask(index int, line string, port int, path string, host string, timeout int, numRetries int) *Task {
+func NewTask(index int64, line string, port int, path string, host string, timeout int, numRetries int) *Task {
 	ip := strings.TrimSpace(line)
 	if host == "" {
 		host = ip
