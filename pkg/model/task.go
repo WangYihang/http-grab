@@ -52,11 +52,15 @@ func (t *Task) Do() {
 		t.NumTries++
 
 		// Create HTTP Client
+		transport := &http.Transport{
+			DisableCompression: true,
+		}
 		client := &http.Client{
 			CheckRedirect: func(req *http.Request, via []*http.Request) error {
 				return http.ErrUseLastResponse
 			},
-			Timeout: 8 * time.Second,
+			Timeout:   8 * time.Second,
+			Transport: transport,
 		}
 
 		// Create HTTP Request
