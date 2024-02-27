@@ -1,27 +1,28 @@
 package main
 
 import (
-	"log/slog"
 	"os"
 
+	"github.com/WangYihang/gojob"
+	"github.com/WangYihang/gojob/pkg/util"
 	"github.com/WangYihang/http-grab/pkg/model"
 	"github.com/jessevdk/go-flags"
 )
 
 type Options struct {
-	InputFilePath         string `short:"i" long:"input" description:"input file path" required:"true"`
-	OutputFilePath        string `short:"o" long:"output" description:"output file path" required:"true"`
-	StatusUpdatesFilePath string `short:"s" long:"status-updates" description:"status updates file path"`
+	InputFilePath  string `short:"i" long:"input" description:"input file path" required:"true"`
+	OutputFilePath string `short:"o" long:"output" description:"output file path" required:"true"`
+	StatusFilePath string `short:"s" long:"status" description:"status file path" required:"true" default:"-"`
 
-	NumWorkers int   `short:"n" long:"num-workers" description:"number of workers" default:"32"`
-	NumShards  int64 `long:"num-shards" description:"number of shards" default:"1"`
-	Shard      int64 `long:"shard" description:"shard" default:"0"`
+	NumWorkers               int   `short:"n" long:"num-workers" description:"number of workers" default:"32"`
+	NumShards                int64 `long:"num-shards" description:"number of shards" default:"1"`
+	Shard                    int64 `long:"shard" description:"shard" default:"0"`
+	MaxTries                 int   `short:"m" long:"max-tries" description:"max tries" default:"4"`
+	MaxRuntimePerTaskSeconds int   `short:"t" long:"max-runtime-per-task-seconds" description:"max runtime per task seconds" default:"60"`
 
-	Port     int    `short:"p" long:"port" description:"port" default:"80"`
-	Path     string `long:"path" description:"path" default:"index.html"`
-	Host     string `long:"host" description:"http host header" default:""`
-	MaxTries int    `short:"m" long:"max-tries" description:"max tries" default:"4"`
-	Timeout  int    `short:"t" long:"timeout" description:"timeout" default:"8"`
+	Port int    `short:"p" long:"port" description:"port" default:"80"`
+	Path string `long:"path" description:"path" default:"index.html"`
+	Host string `long:"host" description:"http host header, leave it blank to use the IP address" default:""`
 }
 
 var opts Options
@@ -31,36 +32,19 @@ func init() {
 	if err != nil {
 		os.Exit(1)
 	}
-	if opts.StatusUpdatesFilePath == "" {
-		opts.StatusUpdatesFilePath = opts.OutputFilePath + ".status"
-	}
-	if opts.Shard >= opts.NumShards {
-		slog.Error("shard must be less than num-shards", slog.Int64("shard", opts.Shard), slog.Int64("num_shards", opts.NumShards))
-		os.Exit(1)
-	}
-}
-
-func load() chan *model.Task {
-	return model.LoadTasks(
-		model.NewTask,
-		opts.InputFilePath,
-		opts.Port,
-		opts.Path,
-		opts.Host,
-		opts.Timeout,
-		opts.MaxTries,
-		opts.NumShards,
-		opts.Shard,
-	)
 }
 
 func main() {
-	numWorkers := opts.NumWorkers
-	numTasks := model.CountLines(opts.InputFilePath, opts.NumShards, opts.Shard)
-	slog.Info("all tasks loaded", slog.Int64("num_tasks", numTasks))
-	resultChans := make([]chan *model.Task, 0, numWorkers)
-	for _, taskChan := range model.FanOut(load(), numWorkers) {
-		resultChans = append(resultChans, model.Worker(taskChan))
+	scheduler := gojob.NewScheduler().
+		SetNumWorkers(opts.NumWorkers).
+		SetMaxRetries(opts.MaxTries).
+		SetMaxRuntimePerTaskSeconds(opts.MaxRuntimePerTaskSeconds).
+		SetNumShards(int64(opts.NumShards)).
+		SetShard(int64(opts.Shard)).
+		SetOutputFilePath(opts.OutputFilePath).
+		Start()
+	for line := range util.Cat(opts.InputFilePath) {
+		scheduler.Submit(model.NewTask(line, opts.Port, opts.Path, opts.Host))
 	}
-	model.StoreTasks(model.FanIn(resultChans), opts.OutputFilePath, opts.StatusUpdatesFilePath, numTasks)
+	scheduler.Wait()
 }
