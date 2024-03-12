@@ -1,5 +1,11 @@
-# syntax=docker/dockerfile:1
+FROM golang:1.22 AS builder
 
-FROM golang:1.21.6-alpine3.19
-RUN go install github.com/WangYihang/http-grab@e76f595
-ENTRYPOINT [ "http-grab" ]
+RUN go install github.com/goreleaser/goreleaser@latest
+WORKDIR /app
+COPY ./.git/ ./.git/
+RUN git reset --hard HEAD
+RUN goreleaser build --clean --id=http-grab --snapshot
+
+FROM scratch
+COPY --from=builder /app/dist/http-grab_linux_amd64_v1/http-grab /usr/local/bin/http-grab
+ENTRYPOINT [ "/usr/local/bin/http-grab" ]
