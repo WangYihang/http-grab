@@ -31,3 +31,4 @@ dist/
 
 # Data file
 *.txt
+*.log
