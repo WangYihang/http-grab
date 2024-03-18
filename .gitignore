@@ -25,3 +25,9 @@ data/
 
 # Goreleaser
 dist/
+
+# SSH Config folder
+.ssh/
+
+# Data file
+*.txt
