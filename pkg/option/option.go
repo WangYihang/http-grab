@@ -1,11 +1,5 @@
 package option
 
-import (
-	"os"
-
-	"github.com/jessevdk/go-flags"
-)
-
 type Option struct {
 	InputFilePath  string `long:"input" description:"input file path" required:"true"`
 	OutputFilePath string `long:"output" description:"output file path" required:"true"`
@@ -20,13 +14,4 @@ type Option struct {
 	Port int    `long:"port" description:"port" default:"80"`
 	Path string `long:"path" description:"path" default:"index.html"`
 	Host string `long:"host" description:"http host header, leave it blank to use the IP address" default:""`
-}
-
-var Opt Option
-
-func init() {
-	_, err := flags.Parse(&Opt)
-	if err != nil {
-		os.Exit(1)
-	}
 }
