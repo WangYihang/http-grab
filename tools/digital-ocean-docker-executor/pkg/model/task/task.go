@@ -204,7 +204,7 @@ func (h *HTTPGrabTask) Download() error {
 		h.e.RunCommand(fmt.Sprintf("docker run --rm -v ~/.aws:/root/.aws amazon/aws-cli configure set aws_access_key_id %s", option.Opt.S3Option.S3AccessKey))
 		h.e.RunCommand(fmt.Sprintf("docker run --rm -v ~/.aws:/root/.aws amazon/aws-cli configure set aws_secret_access_key %s", option.Opt.S3Option.S3SecretKey))
 		h.e.RunCommand(fmt.Sprintf("docker run --rm -v ~/.aws:/root/.aws amazon/aws-cli configure set default.region %s", option.Opt.S3Option.S3Region))
-		h.e.RunCommand(fmt.Sprintf("docker run --rm -v %s:/data -v ~/.aws:/root/.aws amazon/aws-cli s3 cp /data/ s3://dode/%s/%d/%s/ --recursive", h.folder, option.Opt.Name, h.port, today))
+		h.e.RunCommand(fmt.Sprintf("docker run --rm -v %s:/data -v ~/.aws:/root/.aws amazon/aws-cli s3 cp /data/ s3://%s/%s/%d/%s/ --recursive", option.Opt.S3Bucket, h.folder, option.Opt.Name, h.port, today))
 	}
 
 	// Download to local
