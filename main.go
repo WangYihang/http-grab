@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/WangYihang/gojob"
-	"github.com/WangYihang/gojob/pkg/util"
+	"github.com/WangYihang/gojob/pkg/utils"
 	"github.com/WangYihang/http-grab/pkg/model"
 	"github.com/jessevdk/go-flags"
 )
@@ -43,7 +43,7 @@ func main() {
 		SetShard(int64(opts.Shard)).
 		SetOutputFilePath(opts.OutputFilePath).
 		Start()
-	for line := range util.Cat(opts.InputFilePath) {
+	for line := range utils.Cat(opts.InputFilePath) {
 		scheduler.Submit(model.NewTask(line, opts.Port, opts.Path, opts.Host))
 	}
 	scheduler.Wait()

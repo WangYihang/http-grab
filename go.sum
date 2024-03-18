@@ -1,7 +1,9 @@
-github.com/WangYihang/gojob v0.0.8-0.20240227110649-6452a5cc2245 h1:PdxyljUyTYMm+Z8/ip8LjtTFYRekf/aSLeS8vKM49KE=
-github.com/WangYihang/gojob v0.0.8-0.20240227110649-6452a5cc2245/go.mod h1:JWIJDgu3Zln9JfzQVXlEegL8kwU+laLkuSDg6fnp4tA=
+github.com/WangYihang/gojob v0.0.10 h1:/uk84xREArkI1ar3y2rnZCm9aVFK/WVv4a8gtBsuFBs=
+github.com/WangYihang/gojob v0.0.10/go.mod h1:snH4Z/zR9PXav6FvJTDdp6ZGUAK+MJSemxYqEPq0oys=
+github.com/google/uuid v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=
+github.com/google/uuid v1.6.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/jessevdk/go-flags v1.5.0 h1:1jKYvbxEjfUl0fmqTCOfonvskHHXMjBySTLW4y9LFvc=
 github.com/jessevdk/go-flags v1.5.0/go.mod h1:Fw0T6WPc1dYxT4mKEZRfG5kJhaTDP9pj1c2EWnYs/m4=
 golang.org/x/sys v0.0.0-20210320140829-1e4c9ba3b0c4/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
-golang.org/x/sys v0.17.0 h1:25cE3gD+tdBA7lp7QfhuV+rJiE9YXTcS3VG1SqssI/Y=
-golang.org/x/sys v0.17.0/go.mod h1:/VUhepiaJMQUp4+oa/7Zr1D23ma6VTLIYjOOTFZPUcA=
+golang.org/x/sys v0.18.0 h1:DBdB3niSjOA/O0blCZBqDefyWNYveAYMNF1Wum0DYQ4=
+golang.org/x/sys v0.18.0/go.mod h1:/VUhepiaJMQUp4+oa/7Zr1D23ma6VTLIYjOOTFZPUcA=

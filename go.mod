@@ -1,10 +1,15 @@
 module github.com/WangYihang/http-grab
 
-go 1.21.6
+go 1.22
+
+toolchain go1.22.0
 
 require (
-	github.com/WangYihang/gojob v0.0.8-0.20240227110649-6452a5cc2245
+	github.com/WangYihang/gojob v0.0.10
 	github.com/jessevdk/go-flags v1.5.0
 )
 
-require golang.org/x/sys v0.17.0 // indirect
+require (
+	github.com/google/uuid v1.6.0 // indirect
+	golang.org/x/sys v0.18.0 // indirect
+)
