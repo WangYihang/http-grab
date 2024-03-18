@@ -31,7 +31,7 @@ func main() {
 		SetOutputFilePath(Opt.OutputFilePath).
 		Start()
 	for line := range utils.Cat(Opt.InputFilePath) {
-		scheduler.Submit(model.NewTask(line, Opt.Port, Opt.Path, Opt.Host))
+		scheduler.Submit(model.NewTask(line, Opt.Port, Opt.Path, Opt.Host, Opt.Timeout))
 	}
 	scheduler.Wait()
 }

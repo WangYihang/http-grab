@@ -9,23 +9,25 @@ import (
 )
 
 type Task struct {
-	IP   string `json:"ip"`
-	Port int    `json:"port"`
-	Path string `json:"path"`
-	Host string `json:"host"`
-	HTTP HTTP   `json:"http"`
+	IP      string `json:"ip"`
+	Port    int    `json:"port"`
+	Path    string `json:"path"`
+	Host    string `json:"host"`
+	HTTP    HTTP   `json:"http"`
+	Timeout int    `json:"timeout"`
 }
 
-func NewTask(line string, port int, path string, host string) *Task {
+func NewTask(line string, port int, path string, host string, timeout int) *Task {
 	ip := strings.TrimSpace(line)
 	if host == "" {
 		host = ip
 	}
 	return &Task{
-		IP:   ip,
-		Port: port,
-		Path: path,
-		Host: host,
+		IP:      ip,
+		Port:    port,
+		Path:    path,
+		Host:    host,
+		Timeout: timeout,
 	}
 }
 
@@ -38,7 +40,7 @@ func (t *Task) Do() error {
 		CheckRedirect: func(req *http.Request, via []*http.Request) error {
 			return http.ErrUseLastResponse
 		},
-		Timeout:   8 * time.Second,
+		Timeout:   time.Duration(t.Timeout) * time.Second,
 		Transport: transport,
 	}
 
