@@ -8,8 +8,8 @@ type Option struct {
 	NumWorkers               int   `long:"num-workers" description:"number of workers" default:"32"`
 	NumShards                int64 `long:"num-shards" description:"number of shards" default:"1"`
 	Shard                    int64 `long:"shard" description:"shard" default:"0"`
-	MaxTries                 int   `long:"max-tries" description:"max tries" default:"4"`
-	MaxRuntimePerTaskSeconds int   `long:"max-runtime-per-task-seconds" description:"max runtime per task seconds" default:"60"`
+	MaxTries                 int   `long:"max-tries" description:"max tries" default:"2"`
+	MaxRuntimePerTaskSeconds int   `long:"max-runtime-per-task-seconds" description:"max runtime per task seconds" default:"16"`
 
 	Port int    `long:"port" description:"port" default:"80"`
 	Path string `long:"path" description:"path" default:"index.html"`
