@@ -13,28 +13,29 @@ import (
 )
 
 type HTTPGrabTask struct {
-	e           *secureshell.SSHExecutor
-	image       string
-	containerID string
-	labels      map[string]interface{}
-	arguments   *HTTPGrabArguments
-	folder      string
-	port        int
+	e             *secureshell.SSHExecutor
+	image         string
+	containerID   string
+	labels        map[string]interface{}
+	arguments     *HTTPGrabArguments
+	folder        string
+	port          int
+	inputFilePath string
 }
 
-func Generate(name string, port int) <-chan *HTTPGrabTask {
+func Generate(name string, inputFilePath string, port int) <-chan *HTTPGrabTask {
 	out := make(chan *HTTPGrabTask)
 	go func() {
 		defer close(out)
 		shards := 8
 		for shard := range shards {
-			out <- New(port, shard, shards, name)
+			out <- New(inputFilePath, port, shard, shards, name)
 		}
 	}()
 	return out
 }
 
-func New(port, shard, shards int, label string) *HTTPGrabTask {
+func New(inputFilePath string, port, shard, shards int, label string) *HTTPGrabTask {
 	folder := fmt.Sprintf("/data/%s/shards-%d/shard-%d", label, shards, shard)
 	filename := fmt.Sprintf("%s-%d-%d", label, shard, shards)
 	z := &HTTPGrabTask{
@@ -51,11 +52,12 @@ func New(port, shard, shards int, label string) *HTTPGrabTask {
 			WithHost("localhost").
 			WithPath("/").
 			WithNumWorkers(1024),
-		labels: make(map[string]interface{}),
-		image:  "ghcr.io/wangyihang/http-grab:main",
-		folder: folder,
-		port:   port,
+		labels:        make(map[string]interface{}),
+		image:         "ghcr.io/wangyihang/http-grab:main",
+		port:          port,
+		inputFilePath: inputFilePath,
 	}
+	z.folder = folder
 	z.labels["task.label"] = label
 	z.labels["task.shard"] = z.arguments.Shard
 	z.labels["task.num-shards"] = z.arguments.NumShards
@@ -94,7 +96,7 @@ func (h *HTTPGrabTask) Prepare() error {
 		h.arguments.NumShards,
 	))
 	// upload input file
-	h.e.UploadFile("zmap.txt", filepath.Join(h.folder, "input.txt"))
+	h.e.UploadFile(h.inputFilePath, filepath.Join(h.folder, "input.txt"))
 	return nil
 }
 

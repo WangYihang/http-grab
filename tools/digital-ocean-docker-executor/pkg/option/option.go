@@ -32,8 +32,9 @@ type Option struct {
 	S3Option
 	DigitalOceanOption
 	DropletOption
-	Name        string `long:"name" description:"Task name" required:"true" default:"http-grab"`
-	LogFilePath string `long:"log-file-path" description:"Log file path" required:"true" default:""`
+	Name          string `long:"name" description:"Task name" required:"true" default:"http-grab"`
+	LogFilePath   string `long:"log-file-path" description:"Log file path" required:"true" default:""`
+	InputFilePath string `long:"input-file-path" description:"Input file path" required:"true"`
 }
 
 var Opt Option
