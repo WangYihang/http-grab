@@ -35,8 +35,8 @@ func Generate(name string, port int) <-chan *HTTPGrabTask {
 }
 
 func New(port, shard, shards int, label string) *HTTPGrabTask {
-	folder := fmt.Sprintf("/data/http-grab/shards-%d/shard-%d", shards, shard)
-	filename := fmt.Sprintf("http-grab-%d-%d", shard, shards)
+	folder := fmt.Sprintf("/data/%s/shards-%d/shard-%d", label, shards, shard)
+	filename := fmt.Sprintf("%s-%d-%d", label, shard, shards)
 	z := &HTTPGrabTask{
 		arguments: NewHTTPGrabArguments().
 			WithInputFilePath("/data/input.txt").

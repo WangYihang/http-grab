@@ -1,6 +1,7 @@
 package option
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/jessevdk/go-flags"
@@ -19,7 +20,7 @@ type DigitalOceanOption struct {
 }
 
 type DropletOption struct {
-	DropletName           string `long:"droplet-name" description:"Droplet name" required:"true" default:"http-grab"`
+	DropletName           string `long:"droplet-name" description:"Droplet name" required:"true" default:""`
 	DropletSize           string `long:"droplet-size" description:"Droplet size" required:"true" default:"s-1vcpu-1gb"`
 	DropletImage          string `long:"droplet-image" description:"Droplet image" required:"true" default:"docker-20-04"`
 	DropletRegion         string `long:"droplet-region" description:"Droplet region" required:"true" default:"sfo2"`
@@ -31,8 +32,8 @@ type Option struct {
 	S3Option
 	DigitalOceanOption
 	DropletOption
-	Name        string `long:"name" description:"Task name" required:"true" default:"http-grab-task"`
-	LogFilePath string `long:"log-file-path" description:"Log file path" required:"true" default:"http-grab-task.log"`
+	Name        string `long:"name" description:"Task name" required:"true" default:"http-grab"`
+	LogFilePath string `long:"log-file-path" description:"Log file path" required:"true" default:""`
 }
 
 var Opt Option
@@ -40,5 +41,11 @@ var Opt Option
 func init() {
 	if _, err := flags.Parse(&Opt); err != nil {
 		os.Exit(1)
+	}
+	if Opt.LogFilePath == "" {
+		Opt.LogFilePath = fmt.Sprintf("%s.log", Opt.Name)
+	}
+	if Opt.DropletName == "" {
+		Opt.DropletName = Opt.Name
 	}
 }
