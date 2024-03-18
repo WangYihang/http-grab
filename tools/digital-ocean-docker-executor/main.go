@@ -38,7 +38,7 @@ func main() {
 				WithPublicKeyName(option.Opt.Name),
 		).
 		WithMaxConcurrency(option.Opt.NumDroplets).
-		WithDestroyAfterFinished(false)
+		WithDestroyAfterFinished(true)
 	for t := range http_grab_task.Generate(option.Opt.Name, 80) {
 		s.Submit(t)
 	}
