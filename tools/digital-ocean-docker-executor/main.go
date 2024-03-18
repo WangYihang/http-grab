@@ -29,7 +29,7 @@ func main() {
 		WithCreateServerOptions(
 			api.NewCreateServerOptions().
 				WithName(option.Opt.DropletName).
-				WithTag(option.Opt.DropletName).
+				WithTag(option.Opt.Name).
 				WithRegion(option.Opt.DropletRegion).
 				WithSize(option.Opt.DropletSize).
 				WithImage(option.Opt.DropletImage).
