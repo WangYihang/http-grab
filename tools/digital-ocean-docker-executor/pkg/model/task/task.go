@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"path/filepath"
 	"strings"
-	"time"
 
 	"github.com/WangYihang/digital-ocean-docker-executor/pkg/model/executor/secureshell"
 	"github.com/WangYihang/digital-ocean-docker-executor/pkg/model/task"
@@ -20,48 +19,52 @@ type HTTPGrabTask struct {
 	arguments     *HTTPGrabArguments
 	folder        string
 	port          int
-	inputFilePath string
+	shard         int
+	shards        int
+	inputFileName string
 }
 
-func Generate(name string, inputFilePath string, port int) <-chan *HTTPGrabTask {
+func Generate(name string, port int) <-chan *HTTPGrabTask {
 	out := make(chan *HTTPGrabTask)
 	go func() {
 		defer close(out)
-		shards := 8
+		shards := 254
 		for shard := range shards {
-			out <- New(inputFilePath, port, shard, shards, name)
+			out <- New(port, shard, shards, name)
 		}
 	}()
 	return out
 }
 
-func New(inputFilePath string, port, shard, shards int, label string) *HTTPGrabTask {
+func New(port, shard, shards int, label string) *HTTPGrabTask {
 	folder := fmt.Sprintf("/data/%s/shards-%d/shard-%d", label, shards, shard)
-	filename := fmt.Sprintf("%s-%d-%d", label, shard, shards)
-	z := &HTTPGrabTask{
+	inputFileName := fmt.Sprintf("zmap-80-%d-%d.json", shard, shards)
+	outputFileName := fmt.Sprintf("%s-%d-%d", label, shard, shards)
+	h := &HTTPGrabTask{
 		arguments: NewHTTPGrabArguments().
-			WithInputFilePath("/data/input.txt").
-			WithOutputFilePath(fmt.Sprintf("/data/%s.json", filename)).
-			WithStatusFilePath(fmt.Sprintf("/data/%s.status", filename)).
+			WithInputFilePath(filepath.Join("/data", inputFileName)).
+			WithOutputFilePath(fmt.Sprintf("/data/%s.json", outputFileName)).
+			WithStatusFilePath(fmt.Sprintf("/data/%s.status", outputFileName)).
 			WithTimeout(8).
 			WithMaxTries(4).
 			WithMaxRuntimePerTaskSeconds(32).
-			WithShard(shard).
-			WithNumShards(shards).
+			WithShard(0).
+			WithNumShards(1).
 			WithPort(port).
-			WithHost("localhost").
 			WithPath("/").
-			WithNumWorkers(1024),
-		labels:        make(map[string]interface{}),
-		image:         "ghcr.io/wangyihang/http-grab:main",
-		port:          port,
-		inputFilePath: inputFilePath,
+			WithNumWorkers(4096),
+		labels: make(map[string]interface{}),
+		image:  "ghcr.io/wangyihang/http-grab:main",
+		port:   port,
 	}
-	z.folder = folder
-	z.labels["task.label"] = label
-	z.labels["task.shard"] = z.arguments.Shard
-	z.labels["task.num-shards"] = z.arguments.NumShards
-	return z
+	h.folder = folder
+	h.labels["task.label"] = label
+	h.labels["task.shard"] = h.arguments.Shard
+	h.labels["task.num-shards"] = h.arguments.NumShards
+	h.shard = shard
+	h.shards = shards
+	h.inputFileName = inputFileName
+	return h
 }
 
 func (h *HTTPGrabTask) WithArguments(arguments *HTTPGrabArguments) *HTTPGrabTask {
@@ -79,6 +82,7 @@ func (h *HTTPGrabTask) Assign(e *secureshell.SSHExecutor) error {
 }
 
 func (h *HTTPGrabTask) Prepare() error {
+	// Pull docker containers
 	images := []string{
 		"amazon/aws-cli",
 		h.image,
@@ -88,6 +92,7 @@ func (h *HTTPGrabTask) Prepare() error {
 			"docker", "pull", image,
 		}, " "))
 	}
+	// Get IP information
 	h.e.RunCommand(fmt.Sprintf(
 		"mkdir -p %s && wget -O %s/ipinfo-%d-%d.json https://ipinfo.io/json",
 		h.folder,
@@ -95,8 +100,19 @@ func (h *HTTPGrabTask) Prepare() error {
 		h.arguments.Shard,
 		h.arguments.NumShards,
 	))
-	// upload input file
-	h.e.UploadFile(h.inputFilePath, filepath.Join(h.folder, "input.txt"))
+	// Set up amazon s3
+	if option.Opt.S3AccessKey != "" {
+		h.e.RunCommand(fmt.Sprintf("docker run --rm -v ~/.aws:/root/.aws amazon/aws-cli configure set aws_access_key_id %s", option.Opt.S3Option.S3AccessKey))
+		h.e.RunCommand(fmt.Sprintf("docker run --rm -v ~/.aws:/root/.aws amazon/aws-cli configure set aws_secret_access_key %s", option.Opt.S3Option.S3SecretKey))
+		h.e.RunCommand(fmt.Sprintf("docker run --rm -v ~/.aws:/root/.aws amazon/aws-cli configure set default.region %s", option.Opt.S3Option.S3Region))
+	}
+	// Download input file
+	h.e.RunCommand(fmt.Sprintf(
+		"docker run --rm -v %s:/data -v ~/.aws:/root/.aws amazon/aws-cli s3 cp s3://%s/zmap/80/2024-03-18/%s /data/",
+		h.folder,
+		option.Opt.S3Bucket,
+		h.inputFileName,
+	))
 	return nil
 }
 
@@ -202,11 +218,10 @@ func (h *HTTPGrabTask) Status() (task.StatusInterface, error) {
 func (h *HTTPGrabTask) Download() error {
 	// upload to amazon s3
 	if option.Opt.S3AccessKey != "" {
-		today := time.Now().Format("2006-01-02")
 		h.e.RunCommand(fmt.Sprintf("docker run --rm -v ~/.aws:/root/.aws amazon/aws-cli configure set aws_access_key_id %s", option.Opt.S3Option.S3AccessKey))
 		h.e.RunCommand(fmt.Sprintf("docker run --rm -v ~/.aws:/root/.aws amazon/aws-cli configure set aws_secret_access_key %s", option.Opt.S3Option.S3SecretKey))
 		h.e.RunCommand(fmt.Sprintf("docker run --rm -v ~/.aws:/root/.aws amazon/aws-cli configure set default.region %s", option.Opt.S3Option.S3Region))
-		h.e.RunCommand(fmt.Sprintf("docker run --rm -v %s:/data -v ~/.aws:/root/.aws amazon/aws-cli s3 cp /data/ s3://%s/%s/%d/%s/ --recursive", h.folder, option.Opt.S3Bucket, option.Opt.Name, h.port, today))
+		h.e.RunCommand(fmt.Sprintf("docker run --rm -v ~/.aws:/root/.aws -v /data:/data amazon/aws-cli s3 cp /data/ s3://%s/ --recursive", option.Opt.S3Bucket))
 	}
 
 	// Download to local

@@ -39,7 +39,7 @@ func main() {
 		).
 		WithMaxConcurrency(option.Opt.NumDroplets).
 		WithDestroyAfterFinished(true)
-	for t := range http_grab_task.Generate(option.Opt.Name, option.Opt.InputFilePath, 80) {
+	for t := range http_grab_task.Generate(option.Opt.Name, 80) {
 		s.Submit(t)
 	}
 	s.Wait()
