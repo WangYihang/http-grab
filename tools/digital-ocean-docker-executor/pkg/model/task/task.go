@@ -59,8 +59,8 @@ func New(port, shard, shards int, label string) *HTTPGrabTask {
 	}
 	h.folder = folder
 	h.labels["task.label"] = label
-	h.labels["task.shard"] = h.arguments.Shard
-	h.labels["task.num-shards"] = h.arguments.NumShards
+	h.labels["task.shard"] = shard
+	h.labels["task.num-shards"] = shards
 	h.shard = shard
 	h.shards = shards
 	h.inputFileName = inputFileName
