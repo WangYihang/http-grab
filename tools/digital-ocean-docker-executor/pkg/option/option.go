@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/WangYihang/http-grab/tools/digital-ocean-docker-executor/pkg/model"
 	"github.com/jessevdk/go-flags"
 )
 
@@ -34,11 +35,13 @@ type Option struct {
 	DropletOption
 	Name        string `long:"name" description:"Task name" required:"true" default:"http-grab"`
 	LogFilePath string `long:"log-file-path" description:"Log file path" required:"true" default:""`
+	Version     func() `long:"version" description:"print version and exit" json:"-"`
 }
 
 var Opt Option
 
 func init() {
+	Opt.Version = model.PrintVersion
 	if _, err := flags.Parse(&Opt); err != nil {
 		os.Exit(1)
 	}
