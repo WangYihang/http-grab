@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"time"
 
 	"github.com/WangYihang/gojob"
 	"github.com/WangYihang/gojob/pkg/utils"
@@ -14,8 +15,8 @@ import (
 var Opt option.Option
 
 func init() {
-	_, err := flags.Parse(&Opt)
-	if err != nil {
+	Opt.Version = model.PrintVersion
+	if _, err := flags.Parse(&Opt); err != nil {
 		os.Exit(1)
 	}
 }
@@ -29,6 +30,14 @@ func main() {
 		SetShard(int64(Opt.Shard)).
 		SetTotalTasks(utils.Count(loaders.Get(Opt.InputFilePath, "txt"))).
 		SetOutputFilePath(Opt.OutputFilePath).
+		SetMetadata("build", map[string]string{
+			"version": model.Version,
+			"commit":  model.Commit,
+			"date":    model.Date,
+		}).
+		SetMetadata("runner", model.Runner).
+		SetMetadata("arguments", Opt).
+		SetMetadata("started_at", time.Now().Format(time.RFC3339)).
 		Start()
 	for line := range utils.Cat(Opt.InputFilePath) {
 		scheduler.Submit(model.NewTask(line, Opt.Port, Opt.Path, Opt.Host, Opt.Timeout))

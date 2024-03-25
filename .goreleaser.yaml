@@ -21,8 +21,13 @@ builds:
       - CGO_ENABLED=0
     goos:
       - linux
-      - windows
-      - darwin
+    goarch:
+      - amd64
+    ldflags:
+      - -s -w
+      - -X "github.com/WangYihang/http-grab/pkg/model.Version={{.Version}}"
+      - -X "github.com/WangYihang/http-grab/pkg/model.Commit={{.Commit}}"
+      - -X "github.com/WangYihang/http-grab/pkg/model.Date={{.Date}}"
 
   - id: http-grab-dode
     main: tools/digital-ocean-docker-executor/main.go
@@ -31,9 +36,13 @@ builds:
       - CGO_ENABLED=0
     goos:
       - linux
-      - windows
-      - darwin
-
+    goarch:
+      - amd64
+    ldflags:
+      - -s -w
+      - -X "github.com/WangYihang/http-grab/pkg/model.Version={{.Version}}"
+      - -X "github.com/WangYihang/http-grab/pkg/model.Commit={{.Commit}}"
+      - -X "github.com/WangYihang/http-grab/pkg/model.Date={{.Date}}"
 
 archives:
   - format: tar.gz

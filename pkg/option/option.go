@@ -15,4 +15,6 @@ type Option struct {
 	Path    string `long:"path" description:"path" default:"/"`
 	Host    string `long:"host" description:"http host header, leave it blank to use the IP address" default:""`
 	Timeout int    `long:"timeout" description:"timeout" default:"4"`
+
+	Version func() `long:"version" description:"print version and exit" json:"-"`
 }
