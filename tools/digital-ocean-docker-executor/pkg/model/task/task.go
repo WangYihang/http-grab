@@ -51,7 +51,6 @@ func New(port, shard, shards int, label string) *HTTPGrabTask {
 			WithShard(0).
 			WithNumShards(1).
 			WithPort(port).
-			WithPath("/").
 			WithNumWorkers(4096),
 		labels: make(map[string]interface{}),
 		image:  "ghcr.io/wangyihang/http-grab:main",

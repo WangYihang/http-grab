@@ -33,8 +33,8 @@ func NewHTTPGrabArguments() *HTTPGrabArguments {
 		MaxTries:                 2,
 		MaxRuntimePerTaskSeconds: 4,
 		Port:                     80,
-		Path:                     "/",
-		Host:                     "localhost",
+		Path:                     "",
+		Host:                     "",
 		Timeout:                  4,
 	}
 }
