@@ -11,24 +11,55 @@ import (
 type Task struct {
 	IP      string `json:"ip"`
 	Port    int    `json:"port"`
+	Scheme  string `json:"scheme"`
+	Method  string `json:"method"`
 	Path    string `json:"path"`
 	Host    string `json:"host"`
 	HTTP    HTTP   `json:"http"`
 	Timeout int    `json:"timeout"`
 }
 
-func NewTask(line string, port int, path string, host string, timeout int) *Task {
+func NewTask(line string) *Task {
 	ip := strings.TrimSpace(line)
-	if host == "" {
-		host = ip
-	}
 	return &Task{
 		IP:      ip,
-		Port:    port,
-		Path:    path,
-		Host:    host,
-		Timeout: timeout,
+		Port:    80,
+		Scheme:  "http",
+		Method:  "GET",
+		Path:    "/",
+		Host:    ip,
+		Timeout: 5,
 	}
+}
+
+func (t *Task) WithPort(port int) *Task {
+	t.Port = port
+	return t
+}
+
+func (t *Task) WithPath(path string) *Task {
+	t.Path = path
+	return t
+}
+
+func (t *Task) WithHost(host string) *Task {
+	t.Host = host
+	return t
+}
+
+func (t *Task) WithTimeout(timeout int) *Task {
+	t.Timeout = timeout
+	return t
+}
+
+func (t *Task) WithScheme(scheme string) *Task {
+	t.Scheme = scheme
+	return t
+}
+
+func (t *Task) WithMethod(method string) *Task {
+	t.Method = method
+	return t
 }
 
 func (t *Task) Do() error {
@@ -48,8 +79,8 @@ func (t *Task) Do() error {
 	if t.Path == "" {
 		t.Path = "/"
 	}
-	u := fmt.Sprintf("http://%s:%d%s", t.IP, t.Port, t.Path)
-	req, err := http.NewRequest(http.MethodGet, u, nil)
+	u := fmt.Sprintf("%s://%s:%d%s", t.Scheme, t.IP, t.Port, t.Path)
+	req, err := http.NewRequest(t.Method, u, nil)
 	if err != nil {
 		slog.Debug("error occured while creating http request", slog.String("error", err.Error()))
 		return err

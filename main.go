@@ -40,7 +40,13 @@ func main() {
 		SetMetadata("started_at", time.Now().Format(time.RFC3339)).
 		Start()
 	for line := range utils.Cat(Opt.InputFilePath) {
-		scheduler.Submit(model.NewTask(line, Opt.Port, Opt.Path, Opt.Host, Opt.Timeout))
+		scheduler.Submit(
+			model.NewTask(line).
+				WithPort(Opt.Port).
+				WithPath(Opt.Path).
+				WithHost(Opt.Host).
+				WithTimeout(Opt.Timeout),
+		)
 	}
 	scheduler.Wait()
 }
