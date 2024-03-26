@@ -45,7 +45,10 @@ func (t *Task) Do() error {
 	}
 
 	// Create HTTP Request
-	u := fmt.Sprintf("http://%s:%d/%s", t.IP, t.Port, t.Path)
+	if t.Path == "" {
+		t.Path = "/"
+	}
+	u := fmt.Sprintf("http://%s:%d%s", t.IP, t.Port, t.Path)
 	req, err := http.NewRequest(http.MethodGet, u, nil)
 	if err != nil {
 		slog.Debug("error occured while creating http request", slog.String("error", err.Error()))
