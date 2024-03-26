@@ -101,17 +101,17 @@ func (z *HTTPGrabArguments) WithTimeout(timeout int) *HTTPGrabArguments {
 
 func (z *HTTPGrabArguments) String() string {
 	arguments := []string{
-		"--input", z.InputFilePath,
-		"--output", z.OutputFilePath,
-		"--status", z.StatusFilePath,
+		"--input", fmt.Sprintf("%q", z.InputFilePath),
+		"--output", fmt.Sprintf("%q", z.OutputFilePath),
+		"--status", fmt.Sprintf("%q", z.StatusFilePath),
 		"--num-workers", fmt.Sprintf("%d", z.NumWorkers),
 		"--num-shards", fmt.Sprintf("%d", z.NumShards),
 		"--shard", fmt.Sprintf("%d", z.Shard),
 		"--max-tries", fmt.Sprintf("%d", z.MaxTries),
 		"--max-runtime-per-task-seconds", fmt.Sprintf("%d", z.MaxRuntimePerTaskSeconds),
 		"--port", fmt.Sprintf("%d", z.Port),
-		"--path", z.Path,
-		"--host", z.Host,
+		"--path", fmt.Sprintf("%q", z.Path),
+		"--host", fmt.Sprintf("%q", z.Host),
 		"--timeout", fmt.Sprintf("%d", z.Timeout),
 	}
 	return strings.Join(arguments, " ")
