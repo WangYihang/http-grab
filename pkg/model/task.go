@@ -17,6 +17,7 @@ type Task struct {
 	Host    string `json:"host"`
 	HTTP    HTTP   `json:"http"`
 	Timeout int    `json:"timeout"`
+	Error   string `json:"error"`
 }
 
 func NewTask(line string) *Task {
@@ -28,7 +29,8 @@ func NewTask(line string) *Task {
 		Method:  "GET",
 		Path:    "/",
 		Host:    ip,
-		Timeout: 5,
+		Timeout: 8,
+		Error:   "",
 	}
 }
 
@@ -83,6 +85,7 @@ func (t *Task) Do() error {
 	req, err := http.NewRequest(t.Method, u, nil)
 	if err != nil {
 		slog.Debug("error occured while creating http request", slog.String("error", err.Error()))
+		t.Error = err.Error()
 		return err
 	}
 	req.Host = t.Host
@@ -92,6 +95,7 @@ func (t *Task) Do() error {
 	resp, err := client.Do(req)
 	if err != nil {
 		slog.Debug("error occured while doing http request", slog.String("error", err.Error()))
+		t.Error = err.Error()
 		return err
 	}
 
@@ -99,6 +103,7 @@ func (t *Task) Do() error {
 	httpRequest, err := NewHTTPRequest(req)
 	if err != nil {
 		slog.Debug("error occured while creating http request", slog.String("error", err.Error()))
+		t.Error = err.Error()
 		return err
 	}
 	t.HTTP.Request = httpRequest
@@ -107,6 +112,7 @@ func (t *Task) Do() error {
 	httpResponse, err := NewHTTPResponse(resp)
 	if err != nil {
 		slog.Debug("error occured while creating http response", slog.String("error", err.Error()))
+		t.Error = err.Error()
 		return err
 	}
 	t.HTTP.Response = httpResponse
