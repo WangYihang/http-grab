@@ -1,8 +1,11 @@
 package model
 
 import (
+	"context"
+	"crypto/tls"
 	"fmt"
 	"log/slog"
+	"net"
 	"net/http"
 	"strings"
 	"time"
@@ -10,11 +13,12 @@ import (
 
 type Task struct {
 	IP      string `json:"ip"`
-	Port    int    `json:"port"`
+	Port    uint16 `json:"port"`
 	Scheme  string `json:"scheme"`
 	Method  string `json:"method"`
 	Path    string `json:"path"`
 	Host    string `json:"host"`
+	SNI     string `json:"sni"`
 	HTTP    HTTP   `json:"http"`
 	Timeout int    `json:"timeout"`
 	Error   string `json:"error"`
@@ -29,12 +33,13 @@ func NewTask(line string) *Task {
 		Method:  "GET",
 		Path:    "/",
 		Host:    ip,
+		SNI:     ip,
 		Timeout: 8,
 		Error:   "",
 	}
 }
 
-func (t *Task) WithPort(port int) *Task {
+func (t *Task) WithPort(port uint16) *Task {
 	t.Port = port
 	return t
 }
@@ -46,6 +51,11 @@ func (t *Task) WithPath(path string) *Task {
 
 func (t *Task) WithHost(host string) *Task {
 	t.Host = host
+	return t
+}
+
+func (t *Task) WithSNI(sni string) *Task {
+	t.SNI = sni
 	return t
 }
 
@@ -66,8 +76,16 @@ func (t *Task) WithMethod(method string) *Task {
 
 func (t *Task) Do() error {
 	// Create HTTP Client
+	dialer := &net.Dialer{}
 	transport := &http.Transport{
 		DisableCompression: true,
+		TLSClientConfig: &tls.Config{
+			ServerName: t.SNI, // Set SNI to a custom value
+		},
+		DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
+			// Override the address with the specified IP
+			return dialer.DialContext(ctx, network, fmt.Sprintf("%s:%d", t.IP, t.Port))
+		},
 	}
 	client := &http.Client{
 		CheckRedirect: func(req *http.Request, via []*http.Request) error {
