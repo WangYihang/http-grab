@@ -12,30 +12,32 @@ import (
 )
 
 type Task struct {
-	IP      string `json:"ip"`
-	Port    uint16 `json:"port"`
-	Scheme  string `json:"scheme"`
-	Method  string `json:"method"`
-	Path    string `json:"path"`
-	Host    string `json:"host"`
-	SNI     string `json:"sni"`
-	HTTP    HTTP   `json:"http"`
-	Timeout int    `json:"timeout"`
-	Error   string `json:"error"`
+	IP                 string `json:"ip"`
+	Port               uint16 `json:"port"`
+	Scheme             string `json:"scheme"`
+	Method             string `json:"method"`
+	Path               string `json:"path"`
+	Host               string `json:"host"`
+	SNI                string `json:"sni"`
+	HTTP               HTTP   `json:"http"`
+	Timeout            int    `json:"timeout"`
+	InsecureSkipVerify bool   `json:"insecure_skip_verify"`
+	Error              string `json:"error"`
 }
 
 func NewTask(line string) *Task {
 	ip := strings.TrimSpace(line)
 	return &Task{
-		IP:      ip,
-		Port:    80,
-		Scheme:  "http",
-		Method:  "GET",
-		Path:    "/",
-		Host:    ip,
-		SNI:     ip,
-		Timeout: 8,
-		Error:   "",
+		IP:                 ip,
+		Port:               80,
+		Scheme:             "http",
+		Method:             "GET",
+		Path:               "/",
+		Host:               ip,
+		SNI:                ip,
+		Timeout:            8,
+		Error:              "",
+		InsecureSkipVerify: false,
 	}
 }
 
@@ -74,13 +76,19 @@ func (t *Task) WithMethod(method string) *Task {
 	return t
 }
 
+func (t *Task) WithInsecureSkipVerify(insecureSkipVerify bool) *Task {
+	t.InsecureSkipVerify = insecureSkipVerify
+	return t
+}
+
 func (t *Task) Do() error {
 	// Create HTTP Client
 	dialer := &net.Dialer{}
 	transport := &http.Transport{
 		DisableCompression: true,
 		TLSClientConfig: &tls.Config{
-			ServerName: t.SNI, // Set SNI to a custom value
+			ServerName:         t.SNI,
+			InsecureSkipVerify: t.InsecureSkipVerify,
 		},
 		DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
 			// Override the address with the specified IP
