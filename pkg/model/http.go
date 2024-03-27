@@ -1,6 +1,9 @@
 package model
 
 import (
+	"crypto/md5"
+	"crypto/sha256"
+	"encoding/hex"
 	"io"
 	"log/slog"
 	"mime/multipart"
@@ -70,8 +73,9 @@ type HTTPResponse struct {
 
 	Header http.Header `json:"header"`
 
-	RawBody []byte `json:"raw_body"`
-	Body    string `json:"body"`
+	RawBody    []byte `json:"raw_body"`
+	BodySha256 string `json:"body_sha256"`
+	Body       string `json:"body"`
 
 	ContentLength    int64       `json:"content_length"`
 	TransferEncoding []string    `json:"transfer_encoding"`
@@ -103,5 +107,18 @@ func NewHTTPResponse(resp *http.Response) (*HTTPResponse, error) {
 	}
 	httpResponse.RawBody = body
 	httpResponse.Body = string(body)
+	httpResponse.BodySha256 = Sha256(body)
 	return httpResponse, nil
+}
+
+func Sha256(data []byte) string {
+	hash := sha256.New()
+	hash.Write(data)
+	return hex.EncodeToString(hash.Sum(nil))
+}
+
+func Md5(data []byte) string {
+	hash := md5.New()
+	hash.Write(data)
+	return hex.EncodeToString(hash.Sum(nil))
 }
