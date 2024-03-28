@@ -21,6 +21,7 @@ type Task struct {
 	SNI                string `json:"sni"`
 	HTTP               HTTP   `json:"http"`
 	TLS                TLS    `json:"tls"`
+	ConnectTimeout     int    `json:"connect_timeout"`
 	Timeout            int    `json:"timeout"`
 	InsecureSkipVerify bool   `json:"insecure_skip_verify"`
 	Error              string `json:"error"`
@@ -36,6 +37,7 @@ func NewTask(line string) *Task {
 		Path:               "/",
 		Host:               ip,
 		SNI:                ip,
+		ConnectTimeout:     4,
 		Timeout:            8,
 		Error:              "",
 		InsecureSkipVerify: false,
@@ -62,6 +64,11 @@ func (t *Task) WithSNI(sni string) *Task {
 	return t
 }
 
+func (t *Task) WithConnectTimeout(connectTimeout int) *Task {
+	t.ConnectTimeout = connectTimeout
+	return t
+}
+
 func (t *Task) WithTimeout(timeout int) *Task {
 	t.Timeout = timeout
 	return t
@@ -83,21 +90,25 @@ func (t *Task) WithInsecureSkipVerify(insecureSkipVerify bool) *Task {
 }
 
 func (t *Task) Do() error {
+	// Create HTTP Client
 	tlsClientConfig := &tls.Config{
 		ServerName:         t.SNI,
 		InsecureSkipVerify: t.InsecureSkipVerify,
 	}
-	// Create HTTP Client
 	transport := &http.Transport{
 		DisableCompression: true,
 		TLSClientConfig:    tlsClientConfig,
 		DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
-			dialer := &net.Dialer{}
-			// Override the address with the specified IP
+			dialer := &net.Dialer{
+				Timeout: time.Duration(t.ConnectTimeout) * time.Second,
+			}
 			return dialer.DialContext(ctx, network, fmt.Sprintf("%s:%d", t.IP, t.Port))
 		},
 		DialTLSContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
-			conn, err := tls.Dial(network, addr, tlsClientConfig)
+			dialer := &net.Dialer{
+				Timeout: time.Duration(t.ConnectTimeout) * time.Second,
+			}
+			conn, err := tls.DialWithDialer(dialer, network, addr, tlsClientConfig)
 			if err != nil {
 				return nil, err
 			}
