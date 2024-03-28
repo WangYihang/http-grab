@@ -35,8 +35,8 @@ github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/WangYihang/digital-ocean-docker-executor v0.0.0-20240318103611-fa2dd7476e91 h1:b5i2N1WWIk5+qU/WHEddQySPVrC+mMJZ2CChs90xqY4=
 github.com/WangYihang/digital-ocean-docker-executor v0.0.0-20240318103611-fa2dd7476e91/go.mod h1:8I7t7ZK5WtvhCv3AgnWVegstVMiSxtK7JODu2rC/dl0=
-github.com/WangYihang/gojob v0.0.11-0.20240328132251-28a2b73bc541 h1:3ECCzPu1VcpOnYEPWiRVdk9JBiA5R2ocmPGu76CHYZU=
-github.com/WangYihang/gojob v0.0.11-0.20240328132251-28a2b73bc541/go.mod h1:snH4Z/zR9PXav6FvJTDdp6ZGUAK+MJSemxYqEPq0oys=
+github.com/WangYihang/gojob v0.0.11-0.20240328150822-f3e423cc5a88 h1:UMZS61STcc0hVqZVqbgtU4SXmt2/w0l/qxkD91y1bRg=
+github.com/WangYihang/gojob v0.0.11-0.20240328150822-f3e423cc5a88/go.mod h1:snH4Z/zR9PXav6FvJTDdp6ZGUAK+MJSemxYqEPq0oys=
 github.com/aymanbagabas/go-osc52/v2 v2.0.1 h1:HwpRHbFMcZLEVr42D4p7XBqjyuxQH5SMiErDT4WkJ2k=
 github.com/aymanbagabas/go-osc52/v2 v2.0.1/go.mod h1:uYgXzlJ7ZpABp8OJ+exZzJJhRNQ2ASbcXHWsFqH8hp8=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
