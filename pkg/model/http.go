@@ -1,6 +1,7 @@
 package model
 
 import (
+	"bytes"
 	"crypto/md5"
 	"crypto/sha256"
 	"encoding/hex"
@@ -38,10 +39,24 @@ type HTTPRequest struct {
 	PostForm      url.Values      `json:"post_form"`
 	MultipartForm *multipart.Form `json:"multipart_form"`
 
+	RawBody    []byte `json:"raw_body"`
+	BodySha256 string `json:"body_sha256"`
+	Body       string `json:"body"`
+
 	Trailer http.Header `json:"trailer"`
 }
 
 func NewHTTPRequest(req *http.Request) (*HTTPRequest, error) {
+	rawBody := []byte{}
+	if req.Body != nil {
+		body, err := io.ReadAll(req.Body)
+		if err != nil {
+			slog.Warn("error occured while reading request body", slog.String("error", err.Error()))
+			return nil, err
+		}
+		rawBody = body
+	}
+	req.Body = io.NopCloser(bytes.NewReader(rawBody))
 	httpRequest := &HTTPRequest{
 		Method:           req.Method,
 		URL:              req.URL.String(),
@@ -59,6 +74,9 @@ func NewHTTPRequest(req *http.Request) (*HTTPRequest, error) {
 		PostForm:         req.PostForm,
 		MultipartForm:    req.MultipartForm,
 		Trailer:          req.Trailer,
+		RawBody:          rawBody,
+		BodySha256:       Sha256(rawBody),
+		Body:             string(rawBody),
 	}
 	return httpRequest, nil
 }
