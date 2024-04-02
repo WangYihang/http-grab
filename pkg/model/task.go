@@ -22,7 +22,7 @@ type Task struct {
 	Body               string `json:"body"`
 	SNI                string `json:"sni"`
 	HTTP               HTTP   `json:"http"`
-	TLS                TLS    `json:"tls"`
+	TLS                *TLS   `json:"tls,omitempty"`
 	ConnectTimeout     int    `json:"connect_timeout"`
 	Timeout            int    `json:"timeout"`
 	InsecureSkipVerify bool   `json:"insecure_skip_verify"`
@@ -40,10 +40,12 @@ func NewTask(line string) *Task {
 		SNI:                ip,
 		Host:               ip,
 		Body:               "",
+		HTTP:               HTTP{},
+		TLS:                nil,
 		ConnectTimeout:     4,
 		Timeout:            8,
-		Error:              "",
 		InsecureSkipVerify: false,
+		Error:              "",
 	}
 }
 
