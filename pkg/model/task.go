@@ -23,6 +23,7 @@ type Task struct {
 	Body               string            `json:"body"`
 	Queries            map[string]string `json:"queries"`
 	Headers            map[string]string `json:"headers"`
+	Cookies            map[string]string `json:"cookies"`
 	SNI                string            `json:"sni"`
 	HTTP               HTTP              `json:"http"`
 	TLS                *TLS              `json:"tls,omitempty"`
@@ -44,6 +45,7 @@ func NewTask(line string) *Task {
 		Host:               ip,
 		Queries:            make(map[string]string),
 		Headers:            make(map[string]string),
+		Cookies:            make(map[string]string),
 		Body:               "",
 		HTTP:               HTTP{},
 		TLS:                nil,
@@ -118,6 +120,14 @@ func (t *Task) WithQuery(key, value string) *Task {
 	return t
 }
 
+func (t *Task) WithCookie(key, value string) *Task {
+	if t.Cookies == nil {
+		t.Cookies = make(map[string]string)
+	}
+	t.Cookies[key] = value
+	return t
+}
+
 func (t *Task) WithBody(body string) *Task {
 	t.Body = body
 	return t
@@ -171,6 +181,10 @@ func (t *Task) Do() error {
 	req.Host = u.Host
 	req.Header.Set("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0")
 	req.Body = io.NopCloser(strings.NewReader(t.Body))
+
+	for k, v := range t.Cookies {
+		req.AddCookie(&http.Cookie{Name: k, Value: v})
+	}
 
 	// Create HTTP Request
 	httpRequest, err := NewHTTPRequest(req)
