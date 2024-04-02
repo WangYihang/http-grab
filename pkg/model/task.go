@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/tls"
 	"fmt"
+	"io"
 	"log/slog"
 	"net"
 	"net/http"
@@ -18,6 +19,7 @@ type Task struct {
 	Method             string `json:"method"`
 	Path               string `json:"path"`
 	Host               string `json:"host"`
+	Body               string `json:"body"`
 	SNI                string `json:"sni"`
 	HTTP               HTTP   `json:"http"`
 	TLS                TLS    `json:"tls"`
@@ -35,8 +37,9 @@ func NewTask(line string) *Task {
 		Scheme:             "http",
 		Method:             "GET",
 		Path:               "/",
-		Host:               ip,
 		SNI:                ip,
+		Host:               ip,
+		Body:               "",
 		ConnectTimeout:     4,
 		Timeout:            8,
 		Error:              "",
@@ -89,6 +92,11 @@ func (t *Task) WithInsecureSkipVerify(insecureSkipVerify bool) *Task {
 	return t
 }
 
+func (t *Task) WithBody(body string) *Task {
+	t.Body = body
+	return t
+}
+
 func (t *Task) Do() error {
 	// Create HTTP Client
 	tlsClientConfig := &tls.Config{
@@ -137,14 +145,7 @@ func (t *Task) Do() error {
 	}
 	req.Host = t.Host
 	req.Header.Set("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0")
-
-	// Do HTTP Request
-	resp, err := client.Do(req)
-	if err != nil {
-		slog.Debug("error occured while doing http request", slog.String("error", err.Error()))
-		t.Error = err.Error()
-		return err
-	}
+	req.Body = io.NopCloser(strings.NewReader(t.Body))
 
 	// Create HTTP Request
 	httpRequest, err := NewHTTPRequest(req)
@@ -154,6 +155,14 @@ func (t *Task) Do() error {
 		return err
 	}
 	t.HTTP.Request = httpRequest
+
+	// Do HTTP Request
+	resp, err := client.Do(req)
+	if err != nil {
+		slog.Debug("error occured while doing http request", slog.String("error", err.Error()))
+		t.Error = err.Error()
+		return err
+	}
 
 	// Create HTTP Response
 	httpResponse, err := NewHTTPResponse(resp)
