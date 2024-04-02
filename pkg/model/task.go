@@ -182,6 +182,10 @@ func (t *Task) Do() error {
 	req.Header.Set("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0")
 	req.Body = io.NopCloser(strings.NewReader(t.Body))
 
+	for k, v := range t.Headers {
+		req.Header.Set(k, v)
+	}
+
 	for k, v := range t.Cookies {
 		req.AddCookie(&http.Cookie{Name: k, Value: v})
 	}
