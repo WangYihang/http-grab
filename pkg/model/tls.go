@@ -68,7 +68,7 @@ type TLS struct {
 	// ekm func(label string, context []byte, length int) ([]byte, error)
 }
 
-func NewTLS(cs tls.ConnectionState) TLS {
+func NewTLS(cs *tls.ConnectionState) TLS {
 	return TLS{
 		Version:            cs.Version,
 		HandshakeComplete:  cs.HandshakeComplete,

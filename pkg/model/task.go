@@ -120,7 +120,8 @@ func (t *Task) Do() error {
 			if err != nil {
 				return nil, err
 			}
-			t.TLS = NewTLS(conn.ConnectionState())
+			connectionState := conn.ConnectionState()
+			t.TLS = NewTLS(&connectionState)
 			return conn, nil
 		},
 	}
