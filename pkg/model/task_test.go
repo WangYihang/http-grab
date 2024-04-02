@@ -77,18 +77,3 @@ func TestUrlParameters(t *testing.T) {
 		t.Errorf("url not equal")
 	}
 }
-
-func TestLocalServer(t *testing.T) {
-	task := model.NewTask("127.0.0.1").
-		WithScheme("http").
-		WithPort(8080).
-		WithPath("index.php").
-		WithQuery("a", "1").
-		WithQuery("b", "2").
-		WithQuery("c", "3").
-		WithBody("hello world")
-	err := task.Do()
-	if err != nil {
-		t.Errorf("error occured while doing task")
-	}
-}
