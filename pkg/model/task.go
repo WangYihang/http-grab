@@ -8,25 +8,28 @@ import (
 	"log/slog"
 	"net"
 	"net/http"
+	"net/url"
 	"strings"
 	"time"
 )
 
 type Task struct {
-	IP                 string `json:"ip"`
-	Port               uint16 `json:"port"`
-	Scheme             string `json:"scheme"`
-	Method             string `json:"method"`
-	Path               string `json:"path"`
-	Host               string `json:"host"`
-	Body               string `json:"body"`
-	SNI                string `json:"sni"`
-	HTTP               HTTP   `json:"http"`
-	TLS                *TLS   `json:"tls,omitempty"`
-	ConnectTimeout     int    `json:"connect_timeout"`
-	Timeout            int    `json:"timeout"`
-	InsecureSkipVerify bool   `json:"insecure_skip_verify"`
-	Error              string `json:"error"`
+	IP                 string            `json:"ip"`
+	Port               uint16            `json:"port"`
+	Scheme             string            `json:"scheme"`
+	Method             string            `json:"method"`
+	Path               string            `json:"path"`
+	Host               string            `json:"host"`
+	Body               string            `json:"body"`
+	Queries            map[string]string `json:"queries"`
+	Headers            map[string]string `json:"headers"`
+	SNI                string            `json:"sni"`
+	HTTP               HTTP              `json:"http"`
+	TLS                *TLS              `json:"tls,omitempty"`
+	ConnectTimeout     int               `json:"connect_timeout"`
+	Timeout            int               `json:"timeout"`
+	InsecureSkipVerify bool              `json:"insecure_skip_verify"`
+	Error              string            `json:"error"`
 }
 
 func NewTask(line string) *Task {
@@ -39,6 +42,8 @@ func NewTask(line string) *Task {
 		Path:               "/",
 		SNI:                ip,
 		Host:               ip,
+		Queries:            make(map[string]string),
+		Headers:            make(map[string]string),
 		Body:               "",
 		HTTP:               HTTP{},
 		TLS:                nil,
@@ -60,6 +65,9 @@ func (t *Task) WithPath(path string) *Task {
 }
 
 func (t *Task) WithHost(host string) *Task {
+	if host == "" {
+		host = t.IP
+	}
 	t.Host = host
 	return t
 }
@@ -91,6 +99,22 @@ func (t *Task) WithMethod(method string) *Task {
 
 func (t *Task) WithInsecureSkipVerify(insecureSkipVerify bool) *Task {
 	t.InsecureSkipVerify = insecureSkipVerify
+	return t
+}
+
+func (t *Task) WithHeader(key, value string) *Task {
+	if t.Headers == nil {
+		t.Headers = make(map[string]string)
+	}
+	t.Headers[key] = value
+	return t
+}
+
+func (t *Task) WithQuery(key, value string) *Task {
+	if t.Queries == nil {
+		t.Queries = make(map[string]string)
+	}
+	t.Queries[key] = value
 	return t
 }
 
@@ -136,18 +160,15 @@ func (t *Task) Do() error {
 	}
 
 	// Create HTTP Request
-	if t.Path == "" {
-		t.Path = "/"
-	}
-	u := fmt.Sprintf("%s://%s:%d%s", t.Scheme, t.IP, t.Port, t.Path)
-	req, err := http.NewRequest(t.Method, u, nil)
+	u := t.URL()
+	req, err := http.NewRequest(t.Method, u.String(), nil)
 	if err != nil {
 		slog.Debug("error occured while creating http request", slog.String("error", err.Error()))
 		t.Error = err.Error()
 		return err
 	}
 	req.Close = true
-	req.Host = t.Host
+	req.Host = u.Host
 	req.Header.Set("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0")
 	req.Body = io.NopCloser(strings.NewReader(t.Body))
 
@@ -177,4 +198,25 @@ func (t *Task) Do() error {
 	}
 	t.HTTP.Response = httpResponse
 	return nil
+}
+
+func (t *Task) URL() *url.URL {
+	u := &url.URL{
+		Scheme: t.Scheme,
+		Host:   t.Host,
+		Path:   t.Path,
+	}
+	if t.Port != 0 && !isDefaultPort(t.Scheme, t.Port) {
+		u.Host = fmt.Sprintf("%s:%d", t.Host, t.Port)
+	}
+	query := u.Query()
+	for k, v := range t.Queries {
+		query.Add(k, v)
+	}
+	u.RawQuery = query.Encode()
+	return u
+}
+
+func isDefaultPort(scheme string, port uint16) bool {
+	return (scheme == "http" && port == 80) || (scheme == "https" && port == 443)
 }

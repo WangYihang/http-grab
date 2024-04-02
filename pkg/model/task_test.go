@@ -62,3 +62,33 @@ func TestInvalidCertificateTask(t *testing.T) {
 	md5String := hex.EncodeToString(hash[:])
 	slog.Info("task done", "task", string(data), "body_md5", md5String)
 }
+
+func TestUrlParameters(t *testing.T) {
+	task := model.NewTask("127.0.0.1").
+		WithScheme("https").
+		WithPort(8443).
+		WithPath("index.php").
+		WithQuery("a", "1").
+		WithQuery("b", "2").
+		WithQuery("c", "3").
+		WithBody("hello world")
+	t.Logf("url: %s", task.URL())
+	if task.URL().String() != "https://127.0.0.1:8443/index.php?a=1&b=2&c=3" {
+		t.Errorf("url not equal")
+	}
+}
+
+func TestLocalServer(t *testing.T) {
+	task := model.NewTask("127.0.0.1").
+		WithScheme("http").
+		WithPort(8080).
+		WithPath("index.php").
+		WithQuery("a", "1").
+		WithQuery("b", "2").
+		WithQuery("c", "3").
+		WithBody("hello world")
+	err := task.Do()
+	if err != nil {
+		t.Errorf("error occured while doing task")
+	}
+}
