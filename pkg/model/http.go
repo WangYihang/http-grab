@@ -13,8 +13,8 @@ import (
 )
 
 type HTTP struct {
-	Request  *HTTPRequest  `json:"request"`
-	Response *HTTPResponse `json:"response"`
+	Request  *HTTPRequest  `json:"request,omitempty"`
+	Response *HTTPResponse `json:"response,omitempty"`
 }
 
 type HTTPRequest struct {
@@ -32,18 +32,18 @@ type HTTPRequest struct {
 	Header http.Header `json:"header"`
 
 	ContentLength    int64    `json:"content_length"`
-	TransferEncoding []string `json:"transfer_encoding"`
+	TransferEncoding []string `json:"transfer_encoding,omitempty"`
 	Close            bool     `json:"close"`
 
-	Form          url.Values      `json:"form"`
-	PostForm      url.Values      `json:"post_form"`
-	MultipartForm *multipart.Form `json:"multipart_form"`
+	Form          url.Values      `json:"form,omitempty"`
+	PostForm      url.Values      `json:"post_form,omitempty"`
+	MultipartForm *multipart.Form `json:"multipart_form,omitempty"`
 
 	RawBody    []byte `json:"raw_body"`
 	BodySha256 string `json:"body_sha256"`
 	Body       string `json:"body"`
 
-	Trailer http.Header `json:"trailer"`
+	Trailer http.Header `json:"trailer,omitempty"`
 }
 
 func NewHTTPRequest(req *http.Request) (*HTTPRequest, error) {
@@ -96,7 +96,7 @@ type HTTPResponse struct {
 	Body       string `json:"body"`
 
 	ContentLength    int64       `json:"content_length"`
-	TransferEncoding []string    `json:"transfer_encoding"`
+	TransferEncoding []string    `json:"transfer_encoding,omitempty"`
 	Close            bool        `json:"close"`
 	Uncompressed     bool        `json:"uncompressed"`
 	Trailer          http.Header `json:"trailer"`
