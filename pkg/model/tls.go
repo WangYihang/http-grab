@@ -27,7 +27,7 @@ type TLS struct {
 	// the client. It's available both on the server and on the client side.
 	ServerName string `json:"server_name"`
 
-	PeerCertificate *x509.Certificate `json:"peer_certificate"`
+	PeerCertificate *x509.Certificate `json:"peer_certificate,omitempty"`
 
 	// // PeerCertificates are the parsed certificates sent by the peer, in the
 	// // order in which they were sent. The first element is the leaf certificate
@@ -69,6 +69,10 @@ type TLS struct {
 }
 
 func NewTLS(cs *tls.ConnectionState) TLS {
+	var peerCertificate *x509.Certificate
+	if len(cs.PeerCertificates) > 0 {
+		peerCertificate = cs.PeerCertificates[0]
+	}
 	return TLS{
 		Version:            cs.Version,
 		HandshakeComplete:  cs.HandshakeComplete,
@@ -76,6 +80,6 @@ func NewTLS(cs *tls.ConnectionState) TLS {
 		CipherSuite:        cs.CipherSuite,
 		NegotiatedProtocol: cs.NegotiatedProtocol,
 		ServerName:         cs.ServerName,
-		PeerCertificate:    cs.PeerCertificates[0],
+		PeerCertificate:    peerCertificate,
 	}
 }
