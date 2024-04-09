@@ -57,11 +57,17 @@ func NewTask(line string) *Task {
 }
 
 func (t *Task) WithPort(port uint16) *Task {
+	if port == 0 {
+		port = 80
+	}
 	t.Port = port
 	return t
 }
 
 func (t *Task) WithPath(path string) *Task {
+	if path == "" {
+		path = "/"
+	}
 	t.Path = path
 	return t
 }
@@ -75,26 +81,41 @@ func (t *Task) WithHost(host string) *Task {
 }
 
 func (t *Task) WithSNI(sni string) *Task {
+	if sni == "" {
+		sni = t.Host
+	}
 	t.SNI = sni
 	return t
 }
 
 func (t *Task) WithConnectTimeout(connectTimeout int) *Task {
+	if connectTimeout == 0 {
+		connectTimeout = 4
+	}
 	t.ConnectTimeout = connectTimeout
 	return t
 }
 
 func (t *Task) WithTimeout(timeout int) *Task {
+	if timeout == 0 {
+		timeout = 8
+	}
 	t.Timeout = timeout
 	return t
 }
 
 func (t *Task) WithScheme(scheme string) *Task {
+	if scheme == "" {
+		scheme = "http"
+	}
 	t.Scheme = scheme
 	return t
 }
 
 func (t *Task) WithMethod(method string) *Task {
+	if method == "" {
+		method = "GET"
+	}
 	t.Method = method
 	return t
 }
