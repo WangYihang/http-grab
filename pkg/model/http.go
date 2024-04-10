@@ -2,14 +2,13 @@ package model
 
 import (
 	"bytes"
-	"crypto/md5"
-	"crypto/sha256"
-	"encoding/hex"
 	"io"
 	"log/slog"
 	"mime/multipart"
 	"net/http"
 	"net/url"
+
+	"github.com/WangYihang/http-grab/pkg/util"
 )
 
 type HTTP struct {
@@ -75,7 +74,7 @@ func NewHTTPRequest(req *http.Request) (*HTTPRequest, error) {
 		MultipartForm:    req.MultipartForm,
 		Trailer:          req.Trailer,
 		RawBody:          rawBody,
-		BodySha256:       Sha256(rawBody),
+		BodySha256:       util.Sha256(rawBody),
 		Body:             string(rawBody),
 	}
 	return httpRequest, nil
@@ -125,18 +124,6 @@ func NewHTTPResponse(resp *http.Response) (*HTTPResponse, error) {
 	}
 	httpResponse.RawBody = body
 	httpResponse.Body = string(body)
-	httpResponse.BodySha256 = Sha256(body)
+	httpResponse.BodySha256 = util.Sha256(body)
 	return httpResponse, nil
-}
-
-func Sha256(data []byte) string {
-	hash := sha256.New()
-	hash.Write(data)
-	return hex.EncodeToString(hash.Sum(nil))
-}
-
-func Md5(data []byte) string {
-	hash := md5.New()
-	hash.Write(data)
-	return hex.EncodeToString(hash.Sum(nil))
 }
