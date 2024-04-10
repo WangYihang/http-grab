@@ -3,7 +3,120 @@ package model
 import (
 	"crypto/tls"
 	"crypto/x509"
+
+	"github.com/WangYihang/http-grab/pkg/util"
 )
+
+// CertificateWrapper is copied from crypto/x509/x509.go
+type CertificateWrapper struct {
+	Fingerprint string
+	Raw         []byte // Complete ASN.1 DER content (certificate, signature algorithm and signature).
+	// RawTBSCertificate       []byte // Certificate part of raw ASN.1 DER content.
+	// RawSubjectPublicKeyInfo []byte // DER encoded SubjectPublicKeyInfo.
+	// RawSubject              []byte // DER encoded Subject
+	// RawIssuer               []byte // DER encoded Issuer
+
+	// Signature          []byte
+	// SignatureAlgorithm x509.SignatureAlgorithm
+
+	// PublicKeyAlgorithm x509.PublicKeyAlgorithm
+	// PublicKey          crypto.PublicKey
+
+	// Version             int
+	// SerialNumber        *big.Int
+	// Issuer              pkix.Name
+	// Subject             pkix.Name
+	// NotBefore, NotAfter time.Time // Validity bounds.
+	// KeyUsage            x509.KeyUsage
+
+	// // Extensions contains raw X.509 extensions. When parsing certificates,
+	// // this can be used to extract non-critical extensions that are not
+	// // parsed by this package. When marshaling certificates, the Extensions
+	// // field is ignored, see ExtraExtensions.
+	// Extensions []pkix.Extension
+
+	// // ExtraExtensions contains extensions to be copied, raw, into any
+	// // marshaled certificates. Values override any extensions that would
+	// // otherwise be produced based on the other fields. The ExtraExtensions
+	// // field is not populated when parsing certificates, see Extensions.
+	// ExtraExtensions []pkix.Extension
+
+	// // UnhandledCriticalExtensions contains a list of extension IDs that
+	// // were not (fully) processed when parsing. Verify will fail if this
+	// // slice is non-empty, unless verification is delegated to an OS
+	// // library which understands all the critical extensions.
+	// //
+	// // Users can access these extensions using Extensions and can remove
+	// // elements from this slice if they believe that they have been
+	// // handled.
+	// UnhandledCriticalExtensions []asn1.ObjectIdentifier
+
+	// ExtKeyUsage        []x509.ExtKeyUsage      // Sequence of extended key usages.
+	// UnknownExtKeyUsage []asn1.ObjectIdentifier // Encountered extended key usages unknown to this package.
+
+	// // BasicConstraintsValid indicates whether IsCA, MaxPathLen,
+	// // and MaxPathLenZero are valid.
+	// BasicConstraintsValid bool
+	// IsCA                  bool
+
+	// // MaxPathLen and MaxPathLenZero indicate the presence and
+	// // value of the BasicConstraints' "pathLenConstraint".
+	// //
+	// // When parsing a certificate, a positive non-zero MaxPathLen
+	// // means that the field was specified, -1 means it was unset,
+	// // and MaxPathLenZero being true mean that the field was
+	// // explicitly set to zero. The case of MaxPathLen==0 with MaxPathLenZero==false
+	// // should be treated equivalent to -1 (unset).
+	// //
+	// // When generating a certificate, an unset pathLenConstraint
+	// // can be requested with either MaxPathLen == -1 or using the
+	// // zero value for both MaxPathLen and MaxPathLenZero.
+	// MaxPathLen int
+	// // MaxPathLenZero indicates that BasicConstraintsValid==true
+	// // and MaxPathLen==0 should be interpreted as an actual
+	// // maximum path length of zero. Otherwise, that combination is
+	// // interpreted as MaxPathLen not being set.
+	// MaxPathLenZero bool
+
+	// SubjectKeyId   []byte
+	// AuthorityKeyId []byte
+
+	// // RFC 5280, 4.2.2.1 (Authority Information Access)
+	// OCSPServer            []string
+	// IssuingCertificateURL []string
+
+	// // Subject Alternate Name values. (Note that these values may not be valid
+	// // if invalid values were contained within a parsed certificate. For
+	// // example, an element of DNSNames may not be a valid DNS domain name.)
+	// DNSNames       []string
+	// EmailAddresses []string
+	// IPAddresses    []net.IP
+	// URIs           []*url.URL
+
+	// // Name constraints
+	// PermittedDNSDomainsCritical bool // if true then the name constraints are marked critical.
+	// PermittedDNSDomains         []string
+	// ExcludedDNSDomains          []string
+	// PermittedIPRanges           []*net.IPNet
+	// ExcludedIPRanges            []*net.IPNet
+	// PermittedEmailAddresses     []string
+	// ExcludedEmailAddresses      []string
+	// PermittedURIDomains         []string
+	// ExcludedURIDomains          []string
+
+	// // CRL Distribution Points
+	// CRLDistributionPoints []string
+
+	// // PolicyIdentifiers contains asn1.ObjectIdentifiers, the components
+	// // of which are limited to int32. If a certificate contains a policy which
+	// // cannot be represented by asn1.ObjectIdentifier, it will not be included in
+	// // PolicyIdentifiers, but will be present in Policies, which contains all parsed
+	// // policy OIDs.
+	// PolicyIdentifiers []asn1.ObjectIdentifier
+
+	// // Policies contains all policy identifiers included in the certificate.
+	// Policies []x509.OID
+}
 
 type TLS struct {
 	// Version is the TLS version used by the connection (e.g. VersionTLS12).
@@ -27,7 +140,8 @@ type TLS struct {
 	// the client. It's available both on the server and on the client side.
 	ServerName string `json:"server_name"`
 
-	PeerCertificate *x509.Certificate `json:"peer_certificate,omitempty"`
+	// PeerCertificate *x509.Certificate `json:"peer_certificate,omitempty"`
+	PeerCertificate *CertificateWrapper `json:"peer_certificate,omitempty"`
 
 	// // PeerCertificates are the parsed certificates sent by the peer, in the
 	// // order in which they were sent. The first element is the leaf certificate
@@ -80,6 +194,9 @@ func NewTLS(cs *tls.ConnectionState) *TLS {
 		CipherSuite:        cs.CipherSuite,
 		NegotiatedProtocol: cs.NegotiatedProtocol,
 		ServerName:         cs.ServerName,
-		PeerCertificate:    peerCertificate,
+		PeerCertificate: &CertificateWrapper{
+			Raw:         peerCertificate.Raw,
+			Fingerprint: util.Sha256(peerCertificate.Raw),
+		},
 	}
 }

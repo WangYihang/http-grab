@@ -6,7 +6,7 @@ import (
 
 	"github.com/WangYihang/gojob"
 	"github.com/WangYihang/gojob/pkg/utils"
-	"github.com/WangYihang/http-grab/pkg/loaders"
+	"github.com/WangYihang/http-grab/pkg/loader"
 	"github.com/WangYihang/http-grab/pkg/model"
 	"github.com/WangYihang/http-grab/pkg/option"
 	"github.com/jessevdk/go-flags"
@@ -28,7 +28,7 @@ func main() {
 		SetMaxRuntimePerTaskSeconds(Opt.MaxRuntimePerTaskSeconds).
 		SetNumShards(int64(Opt.NumShards)).
 		SetShard(int64(Opt.Shard)).
-		SetTotalTasks(utils.Count(loaders.Get(Opt.InputFilePath, "txt"))).
+		SetTotalTasks(utils.Count(loader.Get(Opt.InputFilePath, "txt"))).
 		SetOutputFilePath(Opt.OutputFilePath).
 		SetMetadata("build", map[string]string{
 			"version": model.Version,
@@ -45,6 +45,8 @@ func main() {
 				WithPort(Opt.Port).
 				WithPath(Opt.Path).
 				WithHost(Opt.Host).
+				WithSNI(Opt.Host).
+				WithScheme(Opt.Scheme).
 				WithTimeout(Opt.Timeout),
 		)
 	}

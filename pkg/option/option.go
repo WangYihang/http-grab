@@ -14,6 +14,7 @@ type Option struct {
 	Port    uint16 `long:"port" description:"port" default:"80"`
 	Path    string `long:"path" description:"path" default:"/"`
 	Host    string `long:"host" description:"http host header, leave it blank to use the IP address" default:""`
+	Scheme  string `long:"scheme" description:"scheme" default:"http"`
 	Timeout int    `long:"timeout" description:"timeout" default:"4"`
 
 	Version func() `long:"version" description:"print version and exit" json:"-"`
