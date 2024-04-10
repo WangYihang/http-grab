@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/WangYihang/gojob"
+	"github.com/WangYihang/gojob/pkg/runner"
 	"github.com/WangYihang/gojob/pkg/utils"
 	"github.com/WangYihang/http-grab/pkg/loader"
 	"github.com/WangYihang/http-grab/pkg/model"
@@ -35,7 +36,7 @@ func main() {
 			"commit":  model.Commit,
 			"date":    model.Date,
 		}).
-		SetMetadata("runner", model.Runner).
+		SetMetadata("runner", runner.Runner).
 		SetMetadata("arguments", Opt).
 		SetMetadata("started_at", time.Now().Format(time.RFC3339)).
 		Start()

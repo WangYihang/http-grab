@@ -37,6 +37,8 @@ github.com/WangYihang/digital-ocean-docker-executor v0.0.0-20240318103611-fa2dd7
 github.com/WangYihang/digital-ocean-docker-executor v0.0.0-20240318103611-fa2dd7476e91/go.mod h1:8I7t7ZK5WtvhCv3AgnWVegstVMiSxtK7JODu2rC/dl0=
 github.com/WangYihang/gojob v0.0.11-0.20240328152802-573e585141c0 h1:jNoVSLwdINF3KQSgbHMg1/xUZtq+xVQx61okImlpuLc=
 github.com/WangYihang/gojob v0.0.11-0.20240328152802-573e585141c0/go.mod h1:snH4Z/zR9PXav6FvJTDdp6ZGUAK+MJSemxYqEPq0oys=
+github.com/WangYihang/gojob v0.0.11-0.20240410041222-85b434163c45 h1:dnIKdwNtpJA4gx42RxXVHVCxI72K+WpGwEo8RfjKwKo=
+github.com/WangYihang/gojob v0.0.11-0.20240410041222-85b434163c45/go.mod h1:snH4Z/zR9PXav6FvJTDdp6ZGUAK+MJSemxYqEPq0oys=
 github.com/aymanbagabas/go-osc52/v2 v2.0.1 h1:HwpRHbFMcZLEVr42D4p7XBqjyuxQH5SMiErDT4WkJ2k=
 github.com/aymanbagabas/go-osc52/v2 v2.0.1/go.mod h1:uYgXzlJ7ZpABp8OJ+exZzJJhRNQ2ASbcXHWsFqH8hp8=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
