@@ -9,8 +9,9 @@ import (
 
 // CertificateWrapper is copied from crypto/x509/x509.go
 type CertificateWrapper struct {
-	Fingerprint string
-	Raw         []byte // Complete ASN.1 DER content (certificate, signature algorithm and signature).
+	Fingerprint string `json:"fingerprint" bson:"fingerprint"`
+	Raw         []byte `json:"raw" bson:"raw"`
+	// Raw         []byte // Complete ASN.1 DER content (certificate, signature algorithm and signature).
 	// RawTBSCertificate       []byte // Certificate part of raw ASN.1 DER content.
 	// RawSubjectPublicKeyInfo []byte // DER encoded SubjectPublicKeyInfo.
 	// RawSubject              []byte // DER encoded Subject
