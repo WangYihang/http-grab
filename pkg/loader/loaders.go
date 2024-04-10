@@ -1,4 +1,4 @@
-package loaders
+package loader
 
 func Get(path string, format string) <-chan string {
 	var loaders = map[string]func(string) <-chan string{
