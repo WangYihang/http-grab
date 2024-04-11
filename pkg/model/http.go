@@ -28,7 +28,7 @@ type HTTPRequest struct {
 	ProtoMajor int    `json:"proto_major"`
 	ProtoMinor int    `json:"proto_minor"`
 
-	Header http.Header `json:"header"`
+	Headers http.Header `json:"headers"`
 
 	ContentLength    int64    `json:"content_length"`
 	TransferEncoding []string `json:"transfer_encoding,omitempty"`
@@ -65,7 +65,7 @@ func NewHTTPRequest(req *http.Request) (*HTTPRequest, error) {
 		Proto:            req.Proto,
 		ProtoMajor:       req.ProtoMajor,
 		ProtoMinor:       req.ProtoMinor,
-		Header:           req.Header,
+		Headers:          req.Header,
 		ContentLength:    req.ContentLength,
 		TransferEncoding: req.TransferEncoding,
 		Close:            req.Close,
@@ -88,7 +88,7 @@ type HTTPResponse struct {
 	ProtoMajor int    `json:"proto_major"`
 	ProtoMinor int    `json:"proto_minor"`
 
-	Header http.Header `json:"header"`
+	Headers http.Header `json:"headers"`
 
 	RawBody    []byte `json:"raw_body"`
 	BodySha256 string `json:"body_sha256"`
@@ -108,7 +108,7 @@ func NewHTTPResponse(resp *http.Response) (*HTTPResponse, error) {
 		Proto:            resp.Proto,
 		ProtoMajor:       resp.ProtoMajor,
 		ProtoMinor:       resp.ProtoMinor,
-		Header:           resp.Header,
+		Headers:          resp.Header,
 		RawBody:          []byte{},
 		ContentLength:    resp.ContentLength,
 		TransferEncoding: resp.TransferEncoding,
