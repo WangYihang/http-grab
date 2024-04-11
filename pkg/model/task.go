@@ -155,6 +155,22 @@ func (t *Task) WithBody(body string) *Task {
 }
 
 func (t *Task) Do() error {
+	// Resolve domain to IP
+	if net.ParseIP(t.IP) == nil {
+		ips, err := net.LookupIP(t.IP)
+		if err != nil {
+			slog.Debug("error occured while resolving domain to ip", slog.String("error", err.Error()))
+			t.Error = err.Error()
+			return err
+		}
+		if len(ips) == 0 {
+			err := fmt.Errorf("no ip found for domain %s", t.IP)
+			slog.Debug("error occured while resolving domain to ip", slog.String("error", err.Error()))
+			t.Error = err.Error()
+			return err
+		}
+		t.IP = ips[0].String()
+	}
 	// Create HTTP Client
 	tlsClientConfig := &tls.Config{
 		ServerName:         t.SNI,
@@ -167,13 +183,15 @@ func (t *Task) Do() error {
 			dialer := &net.Dialer{
 				Timeout: time.Duration(t.ConnectTimeout) * time.Second,
 			}
-			return dialer.DialContext(ctx, network, fmt.Sprintf("%s:%d", t.IP, t.Port))
+			forceAddr := fmt.Sprintf("%s:%d", t.IP, t.Port)
+			return dialer.DialContext(ctx, network, forceAddr)
 		},
 		DialTLSContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
 			dialer := &net.Dialer{
 				Timeout: time.Duration(t.ConnectTimeout) * time.Second,
 			}
-			conn, err := tls.DialWithDialer(dialer, network, addr, tlsClientConfig)
+			forceAddr := fmt.Sprintf("%s:%d", t.IP, t.Port)
+			conn, err := tls.DialWithDialer(dialer, network, forceAddr, tlsClientConfig)
 			if err != nil {
 				return nil, err
 			}
