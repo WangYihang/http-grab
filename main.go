@@ -23,22 +23,23 @@ func init() {
 }
 
 func main() {
-	scheduler := gojob.NewScheduler().
-		SetNumWorkers(Opt.NumWorkers).
-		SetMaxRetries(Opt.MaxTries).
-		SetMaxRuntimePerTaskSeconds(Opt.MaxRuntimePerTaskSeconds).
-		SetNumShards(int64(Opt.NumShards)).
-		SetShard(int64(Opt.Shard)).
-		SetTotalTasks(utils.Count(loader.Get(Opt.InputFilePath, "txt"))).
-		SetOutputFilePath(Opt.OutputFilePath).
-		SetMetadata("build", map[string]string{
+	scheduler := gojob.New(
+		gojob.WithNumWorkers(Opt.NumWorkers),
+		gojob.WithMaxRetries(Opt.MaxTries),
+		gojob.WithMaxRuntimePerTaskSeconds(Opt.MaxRuntimePerTaskSeconds),
+		gojob.WithNumShards(int64(Opt.NumShards)),
+		gojob.WithShard(int64(Opt.Shard)),
+		gojob.WithTotalTasks(utils.Count(loader.Get(Opt.InputFilePath, "txt"))),
+		gojob.WithResultFilePath(Opt.OutputFilePath),
+		gojob.WithMetadata("build", map[string]string{
 			"version": model.Version,
 			"commit":  model.Commit,
 			"date":    model.Date,
-		}).
-		SetMetadata("runner", runner.Runner).
-		SetMetadata("arguments", Opt).
-		SetMetadata("started_at", time.Now().Format(time.RFC3339)).
+		}),
+		gojob.WithMetadata("runner", runner.Runner),
+		gojob.WithMetadata("arguments", Opt),
+		gojob.WithMetadata("started_at", time.Now().Format(time.RFC3339)),
+	).
 		Start()
 	for line := range utils.Cat(Opt.InputFilePath) {
 		scheduler.Submit(

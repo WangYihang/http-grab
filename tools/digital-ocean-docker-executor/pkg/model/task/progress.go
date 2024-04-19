@@ -42,15 +42,15 @@ func (h *GoJobProgress) GetStatus() task.TaskStatus {
 }
 
 func (h *GoJobProgress) NumTotal() int64 {
-	return h.GoJobStatus.TotalTaskCount
+	return h.GoJobStatus.NumTotal
 }
 
 func (h *GoJobProgress) NumDoneWithSuccess() int64 {
-	return h.GoJobStatus.SucceedTaskCount
+	return h.GoJobStatus.NumSucceed
 }
 
 func (h *GoJobProgress) NumDoneWithError() int64 {
-	return h.GoJobStatus.FailedTaskCount
+	return h.GoJobStatus.NumFailed
 }
 
 func (h *GoJobProgress) String() string {
