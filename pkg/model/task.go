@@ -159,13 +159,13 @@ func (t *Task) Do() error {
 	if net.ParseIP(t.IP) == nil {
 		ips, err := net.LookupIP(t.IP)
 		if err != nil {
-			slog.Debug("error occured while resolving domain to ip", slog.String("error", err.Error()))
+			slog.Debug("error occurred while resolving domain to ip", slog.String("error", err.Error()))
 			t.Error = err.Error()
 			return err
 		}
 		if len(ips) == 0 {
 			err := fmt.Errorf("no ip found for domain %s", t.IP)
-			slog.Debug("error occured while resolving domain to ip", slog.String("error", err.Error()))
+			slog.Debug("error occurred while resolving domain to ip", slog.String("error", err.Error()))
 			t.Error = err.Error()
 			return err
 		}
@@ -212,7 +212,7 @@ func (t *Task) Do() error {
 	u := t.URL()
 	req, err := http.NewRequest(t.Method, u.String(), nil)
 	if err != nil {
-		slog.Debug("error occured while creating http request", slog.String("error", err.Error()))
+		slog.Debug("error occurred while creating http request", slog.String("error", err.Error()))
 		t.Error = err.Error()
 		return err
 	}
@@ -232,7 +232,7 @@ func (t *Task) Do() error {
 	// Create HTTP Request
 	httpRequest, err := NewHTTPRequest(req)
 	if err != nil {
-		slog.Debug("error occured while creating http request", slog.String("error", err.Error()))
+		slog.Debug("error occurred while creating http request", slog.String("error", err.Error()))
 		t.Error = err.Error()
 		return err
 	}
@@ -241,7 +241,7 @@ func (t *Task) Do() error {
 	// Do HTTP Request
 	resp, err := client.Do(req)
 	if err != nil {
-		slog.Debug("error occured while doing http request", slog.String("error", err.Error()))
+		slog.Debug("error occurred while doing http request", slog.String("error", err.Error()))
 		t.Error = err.Error()
 		return err
 	}
@@ -249,7 +249,7 @@ func (t *Task) Do() error {
 	// Create HTTP Response
 	httpResponse, err := NewHTTPResponse(resp)
 	if err != nil {
-		slog.Debug("error occured while creating http response", slog.String("error", err.Error()))
+		slog.Debug("error occurred while creating http response", slog.String("error", err.Error()))
 		t.Error = err.Error()
 		return err
 	}

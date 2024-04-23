@@ -24,12 +24,12 @@ func TestCloudflareTask(t *testing.T) {
 		WithInsecureSkipVerify(true)
 	err := task.Do()
 	if err != nil {
-		slog.Error("error occured while doing task", "error", err.Error())
+		slog.Error("error occurred while doing task", "error", err.Error())
 		return
 	}
 	data, err := json.Marshal(task)
 	if err != nil {
-		slog.Error("error occured while marshalling task", "error", err.Error())
+		slog.Error("error occurred while marshalling task", "error", err.Error())
 		return
 	}
 	hash := md5.Sum(task.HTTP.Response.RawBody)
@@ -50,12 +50,12 @@ func TestInvalidCertificateTask(t *testing.T) {
 		WithInsecureSkipVerify(true)
 	err := task.Do()
 	if err != nil {
-		slog.Error("error occured while doing task", "error", err.Error())
+		slog.Error("error occurred while doing task", "error", err.Error())
 		return
 	}
 	data, err := json.Marshal(task)
 	if err != nil {
-		slog.Error("error occured while marshalling task", "error", err.Error())
+		slog.Error("error occurred while marshalling task", "error", err.Error())
 		return
 	}
 	hash := md5.Sum(task.HTTP.Response.RawBody)

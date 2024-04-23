@@ -50,7 +50,7 @@ func NewHTTPRequest(req *http.Request) (*HTTPRequest, error) {
 	if req.Body != nil {
 		body, err := io.ReadAll(req.Body)
 		if err != nil {
-			slog.Warn("error occured while reading request body", slog.String("error", err.Error()))
+			slog.Warn("error occurred while reading request body", slog.String("error", err.Error()))
 			return nil, err
 		}
 		rawBody = body
@@ -119,7 +119,7 @@ func NewHTTPResponse(resp *http.Response) (*HTTPResponse, error) {
 	defer resp.Body.Close()
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		slog.Warn("error occured while reading response body", slog.String("error", err.Error()))
+		slog.Warn("error occurred while reading response body", slog.String("error", err.Error()))
 		return httpResponse, nil
 	}
 	httpResponse.RawBody = body
