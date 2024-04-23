@@ -1,5 +1,8 @@
 # HTTP Grab
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/WangYihang/http-grab.svg)](https://pkg.go.dev/github.com/WangYihang/http-grab)
+[![Go Report Card](https://goreportcard.com/badge/github.com/WangYihang/http-grab)](https://goreportcard.com/report/github.com/WangYihang/http-grab)
+
 ## Description
 
 `http-grab` is a tool for grabbing HTTP response from a list of IP addresses.
