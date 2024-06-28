@@ -7,7 +7,6 @@ import (
 	"github.com/WangYihang/gojob"
 	"github.com/WangYihang/gojob/pkg/runner"
 	"github.com/WangYihang/gojob/pkg/utils"
-	"github.com/WangYihang/http-grab/pkg/loader"
 	"github.com/WangYihang/http-grab/pkg/model"
 	"github.com/WangYihang/http-grab/pkg/option"
 	"github.com/jessevdk/go-flags"
@@ -29,7 +28,6 @@ func main() {
 		gojob.WithMaxRuntimePerTaskSeconds(Opt.MaxRuntimePerTaskSeconds),
 		gojob.WithNumShards(int64(Opt.NumShards)),
 		gojob.WithShard(int64(Opt.Shard)),
-		gojob.WithTotalTasks(utils.Count(loader.Get(Opt.InputFilePath, "txt"))),
 		gojob.WithResultFilePath(Opt.OutputFilePath),
 		gojob.WithMetadata("build", map[string]string{
 			"version": model.Version,
