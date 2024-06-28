@@ -6,7 +6,7 @@ toolchain go1.22.0
 
 require (
 	github.com/WangYihang/digital-ocean-docker-executor v0.0.0-20240318103611-fa2dd7476e91
-	github.com/WangYihang/gojob v0.0.11-0.20240608045710-746577b684f5
+	github.com/WangYihang/gojob v0.0.11-0.20240628081615-9db494cacf2b
 	github.com/charmbracelet/log v0.3.1
 	github.com/jessevdk/go-flags v1.5.0
 )

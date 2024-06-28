@@ -2,6 +2,10 @@ github.com/WangYihang/digital-ocean-docker-executor v0.0.0-20240318103611-fa2dd7
 github.com/WangYihang/digital-ocean-docker-executor v0.0.0-20240318103611-fa2dd7476e91/go.mod h1:8I7t7ZK5WtvhCv3AgnWVegstVMiSxtK7JODu2rC/dl0=
 github.com/WangYihang/gojob v0.0.11-0.20240608045710-746577b684f5 h1:TlbNBLFwxjrD6jmkk4+lysSur5RCf1/dUyu6EDftLEg=
 github.com/WangYihang/gojob v0.0.11-0.20240608045710-746577b684f5/go.mod h1:FgTmc/ELfnqr6RWygOhvR59gpLezE7NxEWWIVIO2z94=
+github.com/WangYihang/gojob v0.0.11-0.20240628081046-f34ef7b06eb5 h1:HfMbcv0RIxbQvSj01Bh2rB4b46uhIaNG9TvdTnotpGU=
+github.com/WangYihang/gojob v0.0.11-0.20240628081046-f34ef7b06eb5/go.mod h1:FgTmc/ELfnqr6RWygOhvR59gpLezE7NxEWWIVIO2z94=
+github.com/WangYihang/gojob v0.0.11-0.20240628081615-9db494cacf2b h1:BjH+vBb8jlVz5P7V9q9Rc9rzfGIW5u/PpPSzpHXwHPo=
+github.com/WangYihang/gojob v0.0.11-0.20240628081615-9db494cacf2b/go.mod h1:FgTmc/ELfnqr6RWygOhvR59gpLezE7NxEWWIVIO2z94=
 github.com/WangYihang/gojob v0.0.12-0.20240420120557-89b7b6fd4536 h1:UrHxuUIbeCbgEC4MQHj5D+y2vgwKkRvsAp28a4axafY=
 github.com/WangYihang/gojob v0.0.12-0.20240420120557-89b7b6fd4536/go.mod h1:J44rvGWyT5gr0LwjBkARgo/fodDfeTEIsZv6l/sPH3A=
 github.com/aymanbagabas/go-osc52/v2 v2.0.1 h1:HwpRHbFMcZLEVr42D4p7XBqjyuxQH5SMiErDT4WkJ2k=
