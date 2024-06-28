@@ -6,7 +6,7 @@ toolchain go1.22.0
 
 require (
 	github.com/WangYihang/digital-ocean-docker-executor v0.0.0-20240318103611-fa2dd7476e91
-	github.com/WangYihang/gojob v0.0.12-0.20240420120557-89b7b6fd4536
+	github.com/WangYihang/gojob v0.0.11-0.20240608045710-746577b684f5
 	github.com/charmbracelet/log v0.3.1
 	github.com/jessevdk/go-flags v1.5.0
 )
@@ -31,7 +31,7 @@ require (
 	github.com/muesli/termenv v0.15.2 // indirect
 	github.com/pkg/sftp v1.13.5 // indirect
 	github.com/prometheus/client_golang v1.19.0 // indirect
-	github.com/prometheus/client_model v0.5.0 // indirect
+	github.com/prometheus/client_model v0.6.1 // indirect
 	github.com/prometheus/common v0.48.0 // indirect
 	github.com/prometheus/procfs v0.12.0 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
