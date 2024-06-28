@@ -6,6 +6,8 @@ github.com/WangYihang/gojob v0.0.11-0.20240628081046-f34ef7b06eb5 h1:HfMbcv0RIxb
 github.com/WangYihang/gojob v0.0.11-0.20240628081046-f34ef7b06eb5/go.mod h1:FgTmc/ELfnqr6RWygOhvR59gpLezE7NxEWWIVIO2z94=
 github.com/WangYihang/gojob v0.0.11-0.20240628081615-9db494cacf2b h1:BjH+vBb8jlVz5P7V9q9Rc9rzfGIW5u/PpPSzpHXwHPo=
 github.com/WangYihang/gojob v0.0.11-0.20240628081615-9db494cacf2b/go.mod h1:FgTmc/ELfnqr6RWygOhvR59gpLezE7NxEWWIVIO2z94=
+github.com/WangYihang/gojob v0.0.11-0.20240628082012-a8583a737102 h1:hiPcHtO8NjOSPsse0PFTt1HJlI30yi93+RiHuLnqvco=
+github.com/WangYihang/gojob v0.0.11-0.20240628082012-a8583a737102/go.mod h1:FgTmc/ELfnqr6RWygOhvR59gpLezE7NxEWWIVIO2z94=
 github.com/WangYihang/gojob v0.0.12-0.20240420120557-89b7b6fd4536 h1:UrHxuUIbeCbgEC4MQHj5D+y2vgwKkRvsAp28a4axafY=
 github.com/WangYihang/gojob v0.0.12-0.20240420120557-89b7b6fd4536/go.mod h1:J44rvGWyT5gr0LwjBkARgo/fodDfeTEIsZv6l/sPH3A=
 github.com/aymanbagabas/go-osc52/v2 v2.0.1 h1:HwpRHbFMcZLEVr42D4p7XBqjyuxQH5SMiErDT4WkJ2k=
