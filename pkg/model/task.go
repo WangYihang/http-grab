@@ -20,6 +20,7 @@ type Task struct {
 	Method             string            `json:"method"`
 	Path               string            `json:"path"`
 	Host               string            `json:"host"`
+	HostType           string            `json:"host_type"`
 	Body               string            `json:"body"`
 	Queries            map[string]string `json:"queries"`
 	Headers            map[string]string `json:"headers"`
@@ -75,8 +76,14 @@ func (t *Task) WithPath(path string) *Task {
 func (t *Task) WithHost(host string) *Task {
 	if host == "" {
 		host = t.IP
+		t.WithHostType("ip")
 	}
 	t.Host = host
+	return t
+}
+
+func (t *Task) WithHostType(hostType string) *Task {
+	t.HostType = hostType
 	return t
 }
 
