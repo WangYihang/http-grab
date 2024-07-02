@@ -22,6 +22,7 @@ func init() {
 }
 
 func main() {
+
 	scheduler := gojob.New(
 		gojob.WithNumWorkers(Opt.NumWorkers),
 		gojob.WithMaxRetries(Opt.MaxTries),
@@ -31,6 +32,7 @@ func main() {
 		gojob.WithResultFilePath(Opt.OutputFilePath),
 		gojob.WithStatusFilePath(Opt.StatusFilePath),
 		gojob.WithMetadataFilePath(Opt.MetadataFilePath),
+		gojob.WithTotalTasks(utils.Count(utils.Cat(Opt.InputFilePath))),
 		gojob.WithMetadata("build", map[string]string{
 			"version": model.Version,
 			"commit":  model.Commit,
