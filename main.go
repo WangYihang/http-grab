@@ -29,6 +29,8 @@ func main() {
 		gojob.WithNumShards(int64(Opt.NumShards)),
 		gojob.WithShard(int64(Opt.Shard)),
 		gojob.WithResultFilePath(Opt.OutputFilePath),
+		gojob.WithStatusFilePath(Opt.StatusFilePath),
+		gojob.WithMetadataFilePath(Opt.MetadataFilePath),
 		gojob.WithMetadata("build", map[string]string{
 			"version": model.Version,
 			"commit":  model.Commit,
