@@ -29,21 +29,6 @@ builds:
       - -X "github.com/WangYihang/http-grab/pkg/model.Commit={{.Commit}}"
       - -X "github.com/WangYihang/http-grab/pkg/model.Date={{.Date}}"
 
-  - id: http-grab-dode
-    main: tools/digital-ocean-docker-executor/main.go
-    binary: http-grab-dode
-    env:
-      - CGO_ENABLED=0
-    goos:
-      - linux
-    goarch:
-      - amd64
-    ldflags:
-      - -s -w
-      - -X "github.com/WangYihang/http-grab/tools/digital-ocean-docker-executor/pkg/model.Version={{.Version}}"
-      - -X "github.com/WangYihang/http-grab/tools/digital-ocean-docker-executor/pkg/model.Commit={{.Commit}}"
-      - -X "github.com/WangYihang/http-grab/tools/digital-ocean-docker-executor/pkg/model.Date={{.Date}}"
-
 archives:
   - format: tar.gz
     # this name template makes the OS and Arch compatible with the results of `uname`.
@@ -72,7 +57,7 @@ upx:
     enabled: true
 
     # Filter by build ID.
-    ids: [ "http-grab", "http-grab-dode" ]
+    ids: [ "http-grab" ]
 
     # Compress argument.
     # Valid options are from '1' (faster) to '9' (better), and 'best'.
