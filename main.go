@@ -50,6 +50,7 @@ func main() {
 				WithPath(Opt.Path).
 				WithHost(Opt.Host).
 				WithSNI(Opt.Host).
+				WithMethod(Opt.Method).
 				WithScheme(Opt.Scheme).
 				WithTimeout(Opt.Timeout),
 		)

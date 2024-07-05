@@ -12,6 +12,7 @@ type Option struct {
 	MaxTries                 int   `long:"max-tries" description:"max tries" default:"2"`
 	MaxRuntimePerTaskSeconds int   `long:"max-runtime-per-task-seconds" description:"max runtime per task seconds" default:"8"`
 
+	Method  string `long:"method" description:"method" default:"GET"`
 	Port    uint16 `long:"port" description:"port" default:"80"`
 	Path    string `long:"path" description:"path" default:"/"`
 	Host    string `long:"host" description:"http host header, leave it blank to use the IP address" default:""`
