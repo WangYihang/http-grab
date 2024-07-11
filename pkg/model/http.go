@@ -16,6 +16,11 @@ type HTTP struct {
 	Response *HTTPResponse `json:"response,omitempty"`
 }
 
+type Header struct {
+	Name  string `json:"name"`
+	Value string `json:"value"`
+}
+
 type HTTPRequest struct {
 	Method string `json:"method"`
 	URL    string `json:"url"`
@@ -28,7 +33,7 @@ type HTTPRequest struct {
 	ProtoMajor int    `json:"proto_major"`
 	ProtoMinor int    `json:"proto_minor"`
 
-	Headers http.Header `json:"headers"`
+	Headers []Header `json:"headers"`
 
 	ContentLength    int64    `json:"content_length"`
 	TransferEncoding []string `json:"transfer_encoding,omitempty"`
@@ -56,6 +61,12 @@ func NewHTTPRequest(req *http.Request) (*HTTPRequest, error) {
 		rawBody = body
 	}
 	req.Body = io.NopCloser(bytes.NewReader(rawBody))
+	headers := []Header{}
+	for name, values := range req.Header {
+		for _, value := range values {
+			headers = append(headers, Header{Name: name, Value: value})
+		}
+	}
 	httpRequest := &HTTPRequest{
 		Method:           req.Method,
 		URL:              req.URL.String(),
@@ -65,7 +76,7 @@ func NewHTTPRequest(req *http.Request) (*HTTPRequest, error) {
 		Proto:            req.Proto,
 		ProtoMajor:       req.ProtoMajor,
 		ProtoMinor:       req.ProtoMinor,
-		Headers:          req.Header,
+		Headers:          headers,
 		ContentLength:    req.ContentLength,
 		TransferEncoding: req.TransferEncoding,
 		Close:            req.Close,
@@ -88,33 +99,45 @@ type HTTPResponse struct {
 	ProtoMajor int    `json:"proto_major"`
 	ProtoMinor int    `json:"proto_minor"`
 
-	Headers http.Header `json:"headers"`
+	Headers []Header `json:"headers"`
 
 	RawBody    []byte `json:"raw_body"`
 	BodySha256 string `json:"body_sha256"`
 	Body       string `json:"body"`
 
-	ContentLength    int64       `json:"content_length"`
-	TransferEncoding []string    `json:"transfer_encoding,omitempty"`
-	Close            bool        `json:"close"`
-	Uncompressed     bool        `json:"uncompressed"`
-	Trailer          http.Header `json:"trailer"`
+	ContentLength    int64    `json:"content_length"`
+	TransferEncoding []string `json:"transfer_encoding,omitempty"`
+	Close            bool     `json:"close"`
+	Uncompressed     bool     `json:"uncompressed"`
+	Trailer          []Header `json:"trailer"`
 }
 
 func NewHTTPResponse(resp *http.Response) (*HTTPResponse, error) {
+	headers := []Header{}
+	for name, values := range resp.Header {
+		for _, value := range values {
+			headers = append(headers, Header{Name: name, Value: value})
+		}
+	}
+	trailer := []Header{}
+	for name, values := range resp.Trailer {
+		for _, value := range values {
+			trailer = append(trailer, Header{Name: name, Value: value})
+		}
+	}
 	httpResponse := &HTTPResponse{
 		Status:           resp.Status,
 		StatusCode:       resp.StatusCode,
 		Proto:            resp.Proto,
 		ProtoMajor:       resp.ProtoMajor,
 		ProtoMinor:       resp.ProtoMinor,
-		Headers:          resp.Header,
+		Headers:          headers,
 		RawBody:          []byte{},
 		ContentLength:    resp.ContentLength,
 		TransferEncoding: resp.TransferEncoding,
 		Close:            resp.Close,
 		Uncompressed:     resp.Uncompressed,
-		Trailer:          resp.Trailer,
+		Trailer:          trailer,
 	}
 	defer resp.Body.Close()
 	body, err := io.ReadAll(resp.Body)
