@@ -47,7 +47,7 @@ type HTTPRequest struct {
 	BodySha256 string `json:"body_sha256"`
 	Body       string `json:"body"`
 
-	Trailer http.Header `json:"trailer,omitempty"`
+	Trailer []Header `json:"trailer,omitempty"`
 }
 
 func NewHTTPRequest(req *http.Request) (*HTTPRequest, error) {
@@ -67,6 +67,12 @@ func NewHTTPRequest(req *http.Request) (*HTTPRequest, error) {
 			headers = append(headers, Header{Name: name, Value: value})
 		}
 	}
+	trailer := []Header{}
+	for name, values := range req.Trailer {
+		for _, value := range values {
+			trailer = append(trailer, Header{Name: name, Value: value})
+		}
+	}
 	httpRequest := &HTTPRequest{
 		Method:           req.Method,
 		URL:              req.URL.String(),
@@ -83,7 +89,7 @@ func NewHTTPRequest(req *http.Request) (*HTTPRequest, error) {
 		Form:             req.Form,
 		PostForm:         req.PostForm,
 		MultipartForm:    req.MultipartForm,
-		Trailer:          req.Trailer,
+		Trailer:          trailer,
 		RawBody:          rawBody,
 		BodySha256:       util.Sha256(rawBody),
 		Body:             string(rawBody),
