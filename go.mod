@@ -5,7 +5,7 @@ go 1.22
 toolchain go1.22.0
 
 require (
-	github.com/WangYihang/gojob v0.0.11-0.20240702151914-b2b4ff8b29b5
+	github.com/WangYihang/gojob v0.0.11-0.20240717140244-811fa9c1403d
 	github.com/jessevdk/go-flags v1.5.0
 )
 
