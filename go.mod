@@ -3,13 +3,14 @@ module github.com/WangYihang/http-grab
 go 1.22.6
 
 require (
-	github.com/WangYihang/gojob v0.0.11-0.20240826152210-dc95d7a73ee7
+	github.com/WangYihang/gojob v0.0.11-0.20240829151739-3d48b32df682
 	github.com/jessevdk/go-flags v1.5.0
 )
 
 require (
-	github.com/WangYihang/uio v0.0.0-20240826152024-f144bed245c7 // indirect
+	github.com/WangYihang/uio v0.0.0-20240829150037-ce8fff04fa48 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
+	github.com/caarlos0/env v3.5.0+incompatible // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/go-ini/ini v1.67.0 // indirect
