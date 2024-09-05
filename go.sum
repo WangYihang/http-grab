@@ -1,5 +1,7 @@
 github.com/WangYihang/gojob v0.0.11-0.20240905152900-36da724ca9ae h1:uCo7K8ruvF7TGzMRxOApsoFO0MhvvPHXA51vGgRwRaM=
 github.com/WangYihang/gojob v0.0.11-0.20240905152900-36da724ca9ae/go.mod h1:BTVbyPWUKszPYIsOFECEJCcY7bFmDrJUJxkXpE7pqwA=
+github.com/WangYihang/gojob v0.0.11-0.20240905153711-f5539ae641c2 h1:GrfAhMVVnjMAGhgBJF/UTCDlG/zQzSXgleAB6Rvxc9E=
+github.com/WangYihang/gojob v0.0.11-0.20240905153711-f5539ae641c2/go.mod h1:BTVbyPWUKszPYIsOFECEJCcY7bFmDrJUJxkXpE7pqwA=
 github.com/WangYihang/uio v0.0.0-20240905152743-19ba2df5e6a6 h1:4r+fK+dAO7ry5gtFV6emxvcwP9sE8QT8UnPfGqlaD6g=
 github.com/WangYihang/uio v0.0.0-20240905152743-19ba2df5e6a6/go.mod h1:5WoqViIAdldkfhEyOaceDjpfH4wazQDLz86aJVnHnGQ=
 github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=

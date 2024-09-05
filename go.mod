@@ -3,7 +3,7 @@ module github.com/WangYihang/http-grab
 go 1.22.6
 
 require (
-	github.com/WangYihang/gojob v0.0.11-0.20240905152900-36da724ca9ae
+	github.com/WangYihang/gojob v0.0.11-0.20240905153711-f5539ae641c2
 	github.com/jessevdk/go-flags v1.5.0
 )
 
