@@ -1,7 +1,7 @@
-github.com/WangYihang/gojob v0.0.11-0.20240829153646-0409504d776f h1:bJZUI5wc6R8tsfShTPpR31N9N0BP/V6osXobFn8OdIE=
-github.com/WangYihang/gojob v0.0.11-0.20240829153646-0409504d776f/go.mod h1:YrErECWAbpt6svyZW8B0r3ThgchWFMiAlx0v5jIKWbw=
-github.com/WangYihang/uio v0.0.0-20240829150037-ce8fff04fa48 h1:PUBSQ5ANsRjj6g0jYPKVIo5m50iTS6gxY6TfCl29Rhk=
-github.com/WangYihang/uio v0.0.0-20240829150037-ce8fff04fa48/go.mod h1:T4KtUOTAaSgFJNlU8mEMi5tPSUM1P8Fe1SrjMUwbxZ4=
+github.com/WangYihang/gojob v0.0.11-0.20240905152900-36da724ca9ae h1:uCo7K8ruvF7TGzMRxOApsoFO0MhvvPHXA51vGgRwRaM=
+github.com/WangYihang/gojob v0.0.11-0.20240905152900-36da724ca9ae/go.mod h1:BTVbyPWUKszPYIsOFECEJCcY7bFmDrJUJxkXpE7pqwA=
+github.com/WangYihang/uio v0.0.0-20240905152743-19ba2df5e6a6 h1:4r+fK+dAO7ry5gtFV6emxvcwP9sE8QT8UnPfGqlaD6g=
+github.com/WangYihang/uio v0.0.0-20240905152743-19ba2df5e6a6/go.mod h1:5WoqViIAdldkfhEyOaceDjpfH4wazQDLz86aJVnHnGQ=
 github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=
 github.com/beorn7/perks v1.0.1/go.mod h1:G2ZrVWU2WbWT9wwq4/hrbKbnv/1ERSJQ0ibhJ6rlkpw=
 github.com/caarlos0/env v3.5.0+incompatible h1:Yy0UN8o9Wtr/jGHZDpCBLpNrzcFLLM2yixi/rBrKyJs=
