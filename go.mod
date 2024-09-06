@@ -3,12 +3,12 @@ module github.com/WangYihang/http-grab
 go 1.22.6
 
 require (
-	github.com/WangYihang/gojob v0.0.11-0.20240906030802-1355e447e59c
+	github.com/WangYihang/gojob v0.0.11-0.20240906041020-093ee12cfc66
 	github.com/jessevdk/go-flags v1.5.0
 )
 
 require (
-	github.com/WangYihang/uio v0.0.0-20240906030653-6e960648c0b6 // indirect
+	github.com/WangYihang/uio v0.0.0-20240906040721-305cfedd121a // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/caarlos0/env v3.5.0+incompatible // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
