@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/WangYihang/gojob"
@@ -9,6 +11,7 @@ import (
 	"github.com/WangYihang/gojob/pkg/utils"
 	"github.com/WangYihang/http-grab/pkg/model"
 	"github.com/WangYihang/http-grab/pkg/option"
+	"github.com/google/uuid"
 	"github.com/jessevdk/go-flags"
 )
 
@@ -44,6 +47,10 @@ func main() {
 	).
 		Start()
 	for line := range utils.Cat(Opt.InputFilePath) {
+		parameters := make(map[string]string)
+		parameters["ingress"] = strings.TrimSpace(line)
+		parameters["timestamp"] = fmt.Sprint(time.Now().UnixMilli())
+		parameters["challenge"] = uuid.New().String()
 		scheduler.Submit(
 			model.NewTask(line).
 				WithPort(Opt.Port).
@@ -52,6 +59,7 @@ func main() {
 				WithSNI(Opt.Host).
 				WithMethod(Opt.Method).
 				WithScheme(Opt.Scheme).
+				WithParameters(parameters).
 				WithTimeout(Opt.Timeout),
 		)
 	}

@@ -82,6 +82,13 @@ func (t *Task) WithHost(host string) *Task {
 	return t
 }
 
+func (t *Task) WithParameters(parameters map[string]string) *Task {
+	for k, v := range parameters {
+		t.Queries[k] = v
+	}
+	return t
+}
+
 func (t *Task) WithHostType(hostType string) *Task {
 	t.HostType = hostType
 	return t
