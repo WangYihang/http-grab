@@ -6,12 +6,16 @@ github.com/WangYihang/gojob v0.0.11-0.20240906030802-1355e447e59c h1:fTvHioHMZUw
 github.com/WangYihang/gojob v0.0.11-0.20240906030802-1355e447e59c/go.mod h1:lxqD6219bkOC5w9xQWPw3auazhD3DEZN5mtY/D10FSw=
 github.com/WangYihang/gojob v0.0.11-0.20240906041020-093ee12cfc66 h1:cWJPIP+uIOn5Se90M+Rq1w0CYix1OjAj638JMPrnUow=
 github.com/WangYihang/gojob v0.0.11-0.20240906041020-093ee12cfc66/go.mod h1:5F73jiRiQQQOv1IALQyfh6pZjQErB0NrnWZ2x8khLiA=
+github.com/WangYihang/gojob v0.0.11-0.20240910061806-66ed0ba94af3 h1:+CVZujIfTjw8tw0fzse4qAIE1D1FdBoWlOp8J3MdE3M=
+github.com/WangYihang/gojob v0.0.11-0.20240910061806-66ed0ba94af3/go.mod h1:zOYn5rMUmdJlEKnHV0Rbj81W50XkWiTg3Qd+9uAX5ks=
 github.com/WangYihang/uio v0.0.0-20240905152743-19ba2df5e6a6 h1:4r+fK+dAO7ry5gtFV6emxvcwP9sE8QT8UnPfGqlaD6g=
 github.com/WangYihang/uio v0.0.0-20240905152743-19ba2df5e6a6/go.mod h1:5WoqViIAdldkfhEyOaceDjpfH4wazQDLz86aJVnHnGQ=
 github.com/WangYihang/uio v0.0.0-20240906030653-6e960648c0b6 h1:Ig0Hu89i+nOY6wgLzOY5x0KBBDqr417uwOtsvr9Pzz8=
 github.com/WangYihang/uio v0.0.0-20240906030653-6e960648c0b6/go.mod h1:5WoqViIAdldkfhEyOaceDjpfH4wazQDLz86aJVnHnGQ=
 github.com/WangYihang/uio v0.0.0-20240906040721-305cfedd121a h1:IGsqxTs+mCkAfJdm3p2rwjlxPhKLyWou80tsDtVSEKM=
 github.com/WangYihang/uio v0.0.0-20240906040721-305cfedd121a/go.mod h1:5WoqViIAdldkfhEyOaceDjpfH4wazQDLz86aJVnHnGQ=
+github.com/WangYihang/uio v0.0.0-20240910061712-086a0337cd43 h1:ecPV975eOq/GLtvuZrZjD3Vqly/Nsb9jzfMyhkisEm0=
+github.com/WangYihang/uio v0.0.0-20240910061712-086a0337cd43/go.mod h1:5WoqViIAdldkfhEyOaceDjpfH4wazQDLz86aJVnHnGQ=
 github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=
 github.com/beorn7/perks v1.0.1/go.mod h1:G2ZrVWU2WbWT9wwq4/hrbKbnv/1ERSJQ0ibhJ6rlkpw=
 github.com/caarlos0/env v3.5.0+incompatible h1:Yy0UN8o9Wtr/jGHZDpCBLpNrzcFLLM2yixi/rBrKyJs=

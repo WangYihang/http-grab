@@ -21,6 +21,11 @@ type Header struct {
 	Value string `json:"value"`
 }
 
+type Query struct {
+	Name  string `json:"name"`
+	Value string `json:"value"`
+}
+
 type HTTPRequest struct {
 	Method string `json:"method"`
 	URL    string `json:"url"`
@@ -29,7 +34,8 @@ type HTTPRequest struct {
 	RemoteAddr string `json:"remote_addr"`
 	RequestURI string `json:"request_uri"`
 
-	Path string `json:"path"`
+	Path    string  `json:"path"`
+	Queries []Query `json:"queries"`
 
 	Proto      string `json:"proto"`
 	ProtoMajor int    `json:"proto_major"`
@@ -75,10 +81,17 @@ func NewHTTPRequest(req *http.Request) (*HTTPRequest, error) {
 			trailer = append(trailer, Header{Name: name, Value: value})
 		}
 	}
+	queries := []Query{}
+	for name, values := range req.URL.Query() {
+		for _, value := range values {
+			queries = append(queries, Query{Name: name, Value: value})
+		}
+	}
 	httpRequest := &HTTPRequest{
 		Method:           req.Method,
 		URL:              req.URL.String(),
 		Path:             req.URL.Path,
+		Queries:          queries,
 		Host:             req.Host,
 		RemoteAddr:       req.RemoteAddr,
 		RequestURI:       req.RequestURI,
