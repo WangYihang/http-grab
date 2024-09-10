@@ -29,6 +29,8 @@ type HTTPRequest struct {
 	RemoteAddr string `json:"remote_addr"`
 	RequestURI string `json:"request_uri"`
 
+	Path string `json:"path"`
+
 	Proto      string `json:"proto"`
 	ProtoMajor int    `json:"proto_major"`
 	ProtoMinor int    `json:"proto_minor"`
@@ -76,6 +78,7 @@ func NewHTTPRequest(req *http.Request) (*HTTPRequest, error) {
 	httpRequest := &HTTPRequest{
 		Method:           req.Method,
 		URL:              req.URL.String(),
+		Path:             req.URL.Path,
 		Host:             req.Host,
 		RemoteAddr:       req.RemoteAddr,
 		RequestURI:       req.RequestURI,
